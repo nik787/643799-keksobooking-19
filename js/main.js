@@ -17,7 +17,7 @@ var AD_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o
 
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
-}
+};
 
 var getRandomElementArr = function (arr) {
   return arr[getRandomInt(0, arr.length)];
