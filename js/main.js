@@ -2,6 +2,7 @@
 
 var map = document.querySelector('.map');
 var quantityObjects = 8;
+var indexDesiredCard = 0;
 var PIN_WIDTH = 50;
 var LOCATION_MINY = 130;
 var LOCATION_MINX = 630;
@@ -75,6 +76,17 @@ var userPinTemplate = document.querySelector('#pin').content.querySelector('.map
 var userPinImg = userPinTemplate.querySelector('img');
 var fragmentPin = document.createDocumentFragment();
 
+var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var userCardTitle = userCardTemplate.querySelector('.popup__title');
+var userCardPrice = userCardTemplate.querySelector('.popup__text--price');
+var userCardType = userCardTemplate.querySelector('.popup__type');
+var userCardCapacity = userCardTemplate.querySelector('.popup__text--capacity');
+var userCardTime = userCardTemplate.querySelector('.popup__text--time');
+var userCardFeatures = userCardTemplate.querySelector('.popup__features');
+var userCardDescription = userCardTemplate.querySelector('.popup__description');
+var userCardPhotos = userCardTemplate.querySelector('.popup__photos');
+var userCardAvatar = userCardTemplate.querySelector('.popup__avatar');
+
 var userCardFeature = userCardFeatures.children;
 var userCardPhoto = userCardPhotos.children;
 
@@ -88,11 +100,10 @@ for (var j = userCardPhoto.length - 1; j >= 0; j--) {
   childPhoto.parentElement.removeChild(childPhoto);
 }
 
+
 var fragmentCard = document.createDocumentFragment();
 
 for (var i = 0; i < ads.length; i++) {
-
-
   userPinTemplate.style.left = ads[i].location.x - PIN_WIDTH / 2 + 'px';
   userPinTemplate.style.top = ads[i].location.y + 'px';
 
@@ -100,44 +111,18 @@ for (var i = 0; i < ads.length; i++) {
   userPinImg.alt = ads[i].offer.title;
   var userPinElement = userPinTemplate.cloneNode(true);
   fragmentPin.appendChild(userPinElement);
-
-  userCardTitle.innerHTML = title;
-  userCardPrice.innerHTML = price + '₽/ночь';
-  userCardType.innerHTML = type;
-  userCardCapacity.innerHTML = rooms + ' комнаты для ' + guests + ' гостей';
-  userCardTime.innerHTML = 'заезд после ' + checkin + ', выезд до ' + checkout;
-  userCardDescription.innerHTML = description;
-  userCardAvatar.src = avatar;
-
-  var userCardElement = userCardTemplate.cloneNode(true);
-  fragmentCard.appendChild(userCardElement);
 }
 
 var userPinList = document.querySelector('.map__pins');
 var mapFilters = document.querySelector('.map__filters-container');
 userPinList.appendChild(fragmentPin);
-map.insertBefore(fragmentCard, mapFilters);
 
-map.classList.remove('map--faded');
-
-
-var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-var userCardTitle = userCardTemplate.querySelector('.popup__title');
-var userCardPrice = userCardTemplate.querySelector('.popup__text--price');
-var userCardType = userCardTemplate.querySelector('.popup__type');
-var userCardCapacity = userCardTemplate.querySelector('.popup__text--capacity');
-var userCardTime = userCardTemplate.querySelector('.popup__text--time');
-var userCardFeatures = userCardTemplate.querySelector('.popup__features');
-var userCardDescription = userCardTemplate.querySelector('.popup__description');
-var userCardPhotos = userCardTemplate.querySelector('.popup__photos');
-var userCardAvatar = userCardTemplate.querySelector('.popup__avatar');
-
-var createCardPopup = function (arr) {
-  var avatar = ads[i].author.avatar;
-  var title = ads[i].offer.title;
-  var price = ads[i].offer.price;
+var createCardPopup = function (index) {
+  var avatar = ads[index].author.avatar;
+  var title = ads[index].offer.title;
+  var price = ads[index].offer.price;
   var type = '';
-  switch (ads[i].offer.type) {
+  switch (ads[index].offer.type) {
     case 'flat':
       type = 'Квартира';
       break;
@@ -153,13 +138,13 @@ var createCardPopup = function (arr) {
     default:
       type = undefined;
   }
-  var rooms = ads[i].offer.rooms;
-  var guests = ads[i].offer.guests;
-  var checkin = ads[i].offer.checkin;
-  var checkout = ads[i].offer.checkout;
-  var features = ads[i].offer.features;
-  var description = ads[i].offer.description;
-  var photos = ads[i].offer.photos;
+  var rooms = ads[index].offer.rooms;
+  var guests = ads[index].offer.guests;
+  var checkin = ads[index].offer.checkin;
+  var checkout = ads[index].offer.checkout;
+  var features = ads[index].offer.features;
+  var description = ads[index].offer.description;
+  var photos = ads[index].offer.photos;
 
   for (var k = 0; k < features.length; k++) {
     var CardFeature = document.createElement('li');
@@ -200,4 +185,21 @@ var createCardPopup = function (arr) {
     cardImage.src = photos[m];
     userCardPhotos.appendChild(cardImage);
   }
-}
+
+  userCardTitle.innerHTML = title;
+  userCardPrice.innerHTML = price + '₽/ночь';
+  userCardType.innerHTML = type;
+  userCardCapacity.innerHTML = rooms + ' комнаты для ' + guests + ' гостей';
+  userCardTime.innerHTML = 'заезд после ' + checkin + ', выезд до ' + checkout;
+  userCardDescription.innerHTML = description;
+  userCardAvatar.src = avatar;
+
+  var userCardElement = userCardTemplate.cloneNode(true);
+  fragmentCard.appendChild(userCardElement);
+};
+
+createCardPopup(indexDesiredCard);
+
+map.insertBefore(fragmentCard, mapFilters);
+
+map.classList.remove('map--faded');
