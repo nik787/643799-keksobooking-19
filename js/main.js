@@ -74,7 +74,6 @@ var ads = createListAds();
 
 var userPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var userPinImg = userPinTemplate.querySelector('img');
-<<<<<<< HEAD
 var fragmentPin = document.createDocumentFragment();
 
 var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -105,16 +104,11 @@ for (var j = userCardPhoto.length - 1; j >= 0; j--) {
 var fragmentCard = document.createDocumentFragment();
 
 for (var i = 0; i < ads.length; i++) {
-=======
-
-for (var i = 0; i < quantityObjects; i++) {
->>>>>>> parent of e3c5387... Начал разбивку на отдельные фрагменты
   userPinTemplate.style.left = ads[i].location.x - PIN_WIDTH / 2 + 'px';
   userPinTemplate.style.top = ads[i].location.y + 'px';
 
   userPinImg.src = ads[i].author.avatar;
   userPinImg.alt = ads[i].offer.title;
-<<<<<<< HEAD
   var userPinElement = userPinTemplate.cloneNode(true);
   fragmentPin.appendChild(userPinElement);
 }
@@ -207,10 +201,3 @@ var createCardPopup = function (index) {
 createCardPopup(indexDesiredCard);
 map.insertBefore(fragmentCard, mapFilters);
 map.classList.remove('map--faded');
-=======
-
-  var userPinList = document.querySelector('.map__pins');
-  var userPinElement = userPinTemplate.cloneNode(true);
-  userPinList.appendChild(userPinElement);
-}
->>>>>>> parent of e3c5387... Начал разбивку на отдельные фрагменты
