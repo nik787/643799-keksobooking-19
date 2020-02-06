@@ -1,6 +1,5 @@
 'use strict';
 
-var map = document.querySelector('.map');
 var quantityObjects = 8;
 var indexDesiredCard = 0;
 var PIN_WIDTH = 50;
@@ -34,13 +33,13 @@ var getRAndomElementsArr = function (arr) {
   return newArr;
 };
 
+
+var map = document.querySelector('.map');
+map.classList.remove('map--faded');
+
 var createListAds = function () {
   var listAds = [];
   for (var i = 0; i < quantityObjects; i++) {
-    var location = {
-      x: getRandomInt(0, MAP_WIDTH), // случайное число, координата x метки на карте. Значение ограничено размерами блока, в котором перетаскивается метка = 1200
-      y: getRandomInt(LOCATION_MINY, LOCATION_MINX) // случайное число, координата y метки на карте от 130 до 630
-    };
 
     listAds[i] = {
       author: {
@@ -52,8 +51,8 @@ var createListAds = function () {
         address: location.x + ', ' + location.y, // строка, адрес предложения
         price: AD_PRICE, // число, стоимость
         type: getRandomElementArr(AD_TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
-        rooms: getRandomInt(1, 5), // число, количество комнат
-        guests: getRandomInt(1, 5), // число, количество гостей, которое можно разместить
+        rooms: getRandomInt(0, 5), // число, количество комнат
+        guests: getRandomInt(0, 5), // число, количество гостей, которое можно разместить
         checkin: getRandomElementArr(AD_CHECKIN), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         checkout: getRandomElementArr(AD_CHECKOUT), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         features: getRAndomElementsArr(AD_FEATURES),
@@ -62,8 +61,9 @@ var createListAds = function () {
       },
 
       location: {
-        x: location.x,
-        y: location.y
+        x: getRandomInt(0, MAP_WIDTH), // случайное число, координата x метки на карте.
+        // Значение ограничено размерами блока, в котором перетаскивается метка = 1200
+        y: getRandomInt(LOCATION_MINY, LOCATION_MINX) // случайное число, координата y метки на карте от 130 до 630
       }
     };
   }
@@ -74,6 +74,7 @@ var ads = createListAds();
 
 var userPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var userPinImg = userPinTemplate.querySelector('img');
+<<<<<<< HEAD
 var fragmentPin = document.createDocumentFragment();
 
 var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -104,11 +105,16 @@ for (var j = userCardPhoto.length - 1; j >= 0; j--) {
 var fragmentCard = document.createDocumentFragment();
 
 for (var i = 0; i < ads.length; i++) {
+=======
+
+for (var i = 0; i < quantityObjects; i++) {
+>>>>>>> parent of e3c5387... Начал разбивку на отдельные фрагменты
   userPinTemplate.style.left = ads[i].location.x - PIN_WIDTH / 2 + 'px';
   userPinTemplate.style.top = ads[i].location.y + 'px';
 
   userPinImg.src = ads[i].author.avatar;
   userPinImg.alt = ads[i].offer.title;
+<<<<<<< HEAD
   var userPinElement = userPinTemplate.cloneNode(true);
   fragmentPin.appendChild(userPinElement);
 }
@@ -201,3 +207,10 @@ var createCardPopup = function (index) {
 createCardPopup(indexDesiredCard);
 map.insertBefore(fragmentCard, mapFilters);
 map.classList.remove('map--faded');
+=======
+
+  var userPinList = document.querySelector('.map__pins');
+  var userPinElement = userPinTemplate.cloneNode(true);
+  userPinList.appendChild(userPinElement);
+}
+>>>>>>> parent of e3c5387... Начал разбивку на отдельные фрагменты
