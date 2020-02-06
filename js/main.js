@@ -199,7 +199,5 @@ var createCardPopup = function (index) {
 };
 
 createCardPopup(indexDesiredCard);
-
 map.insertBefore(fragmentCard, mapFilters);
-
 map.classList.remove('map--faded');
