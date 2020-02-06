@@ -51,8 +51,8 @@ var createListAds = function () {
         address: location.x + ', ' + location.y, // строка, адрес предложения
         price: AD_PRICE, // число, стоимость
         type: getRandomElementArr(AD_TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
-        rooms: getRandomInt(0, 5), // число, количество комнат
-        guests: getRandomInt(0, 5), // число, количество гостей, которое можно разместить
+        rooms: getRandomInt(1, 5), // число, количество комнат
+        guests: getRandomInt(1, 5), // число, количество гостей, которое можно разместить
         checkin: getRandomElementArr(AD_CHECKIN), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         checkout: getRandomElementArr(AD_CHECKOUT), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         features: getRAndomElementsArr(AD_FEATURES),
