@@ -172,7 +172,7 @@ var createCardPopup = function (index) {
         classFeature = 'popup__feature--conditioner';
         break;
       default:
-        childFeature.parentElement.removeChild(childFeature);
+        classFeature = '';
     }
     сardFeature.classList.add(classFeature);
     userCardFeatures.appendChild(сardFeature);
