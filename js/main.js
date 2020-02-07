@@ -149,9 +149,9 @@ var createCardPopup = function (index) {
   var photos = ads[index].offer.photos;
 
   for (var k = 0; k < features.length; k++) {
-    var CardFeature = document.createElement('li');
+    var сardFeature = document.createElement('li');
     var classFeature = '';
-    CardFeature.classList.add('popup__feature');
+    сardFeature.classList.add('popup__feature');
     switch (features[k]) {
       case 'wifi':
         classFeature = 'popup__feature--wifi';
@@ -174,8 +174,8 @@ var createCardPopup = function (index) {
       default:
         childFeature.parentElement.removeChild(childFeature);
     }
-    CardFeature.classList.add(classFeature);
-    userCardFeatures.appendChild(CardFeature);
+    сardFeature.classList.add(classFeature);
+    userCardFeatures.appendChild(сardFeature);
   }
 
   for (var m = 0; m < photos.length; m++) {
