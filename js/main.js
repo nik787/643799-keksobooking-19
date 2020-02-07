@@ -2,6 +2,8 @@
 
 var QUANTITY_OBJECTS = 8;
 var INDEX_DESIRED_CARD = 0;
+var MIN_AMOUNT = 1;
+var MAX_AMOUNT = 5;
 var PIN_WIDTH = 50;
 var LOCATION_MINY = 130;
 var LOCATION_MINX = 630;
@@ -51,8 +53,8 @@ var createListAds = function () {
         address: location.x + ', ' + location.y, // строка, адрес предложения
         price: AD_PRICE, // число, стоимость
         type: getRandomElementArr(AD_TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
-        rooms: getRandomInt(1, 5), // число, количество комнат
-        guests: getRandomInt(1, 5), // число, количество гостей, которое можно разместить
+        rooms: getRandomInt(MIN_AMOUNT, MAX_AMOUNT), // число, количество комнат
+        guests: getRandomInt(MIN_AMOUNT, MAX_AMOUNT), // число, количество гостей, которое можно разместить
         checkin: getRandomElementArr(AD_CHECKIN), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         checkout: getRandomElementArr(AD_CHECKOUT), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         features: getRAndomElementsArr(AD_FEATURES),
