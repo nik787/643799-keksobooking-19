@@ -1,7 +1,7 @@
 'use strict';
 
-var quantityObjects = 8;
-var indexDesiredCard = 0;
+var QUANTITY_OBJECTS = 8;
+var INDEX_DESIRED_CARD = 0;
 var PIN_WIDTH = 50;
 var LOCATION_MINY = 130;
 var LOCATION_MINX = 630;
@@ -39,7 +39,7 @@ map.classList.remove('map--faded');
 
 var createListAds = function () {
   var listAds = [];
-  for (var i = 0; i < quantityObjects; i++) {
+  for (var i = 0; i < QUANTITY_OBJECTS; i++) {
 
     listAds[i] = {
       author: {
@@ -198,6 +198,6 @@ var createCardPopup = function (index) {
   fragmentCard.appendChild(userCardElement);
 };
 
-createCardPopup(indexDesiredCard);
+createCardPopup(INDEX_DESIRED_CARD);
 map.insertBefore(fragmentCard, mapFilters);
 map.classList.remove('map--faded');
