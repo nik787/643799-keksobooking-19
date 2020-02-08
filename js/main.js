@@ -1,6 +1,9 @@
 'use strict';
 
-var quantityObjects = 8;
+var QUANTITY_OBJECTS = 8;
+var INDEX_DESIRED_CARD = 0;
+var MIN_AMOUNT = 1;
+var MAX_AMOUNT = 5;
 var PIN_WIDTH = 50;
 var LOCATION_MINY = 130;
 var LOCATION_MINX = 630;
@@ -38,7 +41,7 @@ map.classList.remove('map--faded');
 
 var createListAds = function () {
   var listAds = [];
-  for (var i = 0; i < quantityObjects; i++) {
+  for (var i = 0; i < QUANTITY_OBJECTS; i++) {
 
     listAds[i] = {
       author: {
@@ -50,8 +53,8 @@ var createListAds = function () {
         address: location.x + ', ' + location.y, // строка, адрес предложения
         price: AD_PRICE, // число, стоимость
         type: getRandomElementArr(AD_TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
-        rooms: getRandomInt(0, 5), // число, количество комнат
-        guests: getRandomInt(0, 5), // число, количество гостей, которое можно разместить
+        rooms: getRandomInt(MIN_AMOUNT, MAX_AMOUNT), // число, количество комнат
+        guests: getRandomInt(MIN_AMOUNT, MAX_AMOUNT), // число, количество гостей, которое можно разместить
         checkin: getRandomElementArr(AD_CHECKIN), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         checkout: getRandomElementArr(AD_CHECKOUT), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         features: getRAndomElementsArr(AD_FEATURES),
@@ -73,15 +76,130 @@ var ads = createListAds();
 
 var userPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var userPinImg = userPinTemplate.querySelector('img');
+var fragmentPin = document.createDocumentFragment();
 
-for (var i = 0; i < quantityObjects; i++) {
+var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var userCardTitle = userCardTemplate.querySelector('.popup__title');
+var userCardPrice = userCardTemplate.querySelector('.popup__text--price');
+var userCardType = userCardTemplate.querySelector('.popup__type');
+var userCardCapacity = userCardTemplate.querySelector('.popup__text--capacity');
+var userCardTime = userCardTemplate.querySelector('.popup__text--time');
+var userCardFeatures = userCardTemplate.querySelector('.popup__features');
+var userCardDescription = userCardTemplate.querySelector('.popup__description');
+var userCardPhotos = userCardTemplate.querySelector('.popup__photos');
+var userCardAvatar = userCardTemplate.querySelector('.popup__avatar');
+
+var userCardFeature = userCardFeatures.children;
+var userCardPhoto = userCardPhotos.children;
+
+for (var z = userCardFeature.length - 1; z >= 0; z--) {
+  var childFeature = userCardFeature[z];
+  childFeature.parentElement.removeChild(childFeature);
+}
+
+for (var j = userCardPhoto.length - 1; j >= 0; j--) {
+  var childPhoto = userCardPhoto[j];
+  childPhoto.parentElement.removeChild(childPhoto);
+}
+
+
+var fragmentCard = document.createDocumentFragment();
+
+for (var i = 0; i < ads.length; i++) {
   userPinTemplate.style.left = ads[i].location.x - PIN_WIDTH / 2 + 'px';
   userPinTemplate.style.top = ads[i].location.y + 'px';
 
   userPinImg.src = ads[i].author.avatar;
   userPinImg.alt = ads[i].offer.title;
-
-  var userPinList = document.querySelector('.map__pins');
   var userPinElement = userPinTemplate.cloneNode(true);
-  userPinList.appendChild(userPinElement);
+  fragmentPin.appendChild(userPinElement);
 }
+
+var userPinList = document.querySelector('.map__pins');
+var mapFilters = document.querySelector('.map__filters-container');
+userPinList.appendChild(fragmentPin);
+
+var createCardPopup = function (index) {
+  var avatar = ads[index].author.avatar;
+  var title = ads[index].offer.title;
+  var price = ads[index].offer.price;
+  var type = '';
+  switch (ads[index].offer.type) {
+    case 'flat':
+      type = 'Квартира';
+      break;
+    case 'bungalo':
+      type = 'Бунгало';
+      break;
+    case 'house':
+      type = 'Дом';
+      break;
+    case 'palace':
+      type = 'Дворец';
+      break;
+    default:
+      type = undefined;
+  }
+  var rooms = ads[index].offer.rooms;
+  var guests = ads[index].offer.guests;
+  var checkin = ads[index].offer.checkin;
+  var checkout = ads[index].offer.checkout;
+  var features = ads[index].offer.features;
+  var description = ads[index].offer.description;
+  var photos = ads[index].offer.photos;
+
+  for (var k = 0; k < features.length; k++) {
+    var сardFeature = document.createElement('li');
+    var classFeature = '';
+    сardFeature.classList.add('popup__feature');
+    switch (features[k]) {
+      case 'wifi':
+        classFeature = 'popup__feature--wifi';
+        break;
+      case 'dishwasher':
+        classFeature = 'popup__feature--dishwasher';
+        break;
+      case 'parking':
+        classFeature = 'popup__feature--parking';
+        break;
+      case 'washer':
+        classFeature = 'popup__feature--washer';
+        break;
+      case 'elevator':
+        classFeature = 'popup__feature--elevator';
+        break;
+      case 'conditioner':
+        classFeature = 'popup__feature--conditioner';
+        break;
+      default:
+        classFeature = '';
+    }
+    сardFeature.classList.add(classFeature);
+    userCardFeatures.appendChild(сardFeature);
+  }
+
+  for (var m = 0; m < photos.length; m++) {
+    var cardImage = document.createElement('img');
+    cardImage.classList.add('popup__photo');
+    cardImage.width = '45';
+    cardImage.height = '40';
+    cardImage.alt = 'Фотография жилья';
+    cardImage.src = photos[m];
+    userCardPhotos.appendChild(cardImage);
+  }
+
+  userCardTitle.innerHTML = title;
+  userCardPrice.innerHTML = price + '₽/ночь';
+  userCardType.innerHTML = type;
+  userCardCapacity.innerHTML = rooms + ' комнаты для ' + guests + ' гостей';
+  userCardTime.innerHTML = 'заезд после ' + checkin + ', выезд до ' + checkout;
+  userCardDescription.innerHTML = description;
+  userCardAvatar.src = avatar;
+
+  var userCardElement = userCardTemplate.cloneNode(true);
+  fragmentCard.appendChild(userCardElement);
+};
+
+createCardPopup(INDEX_DESIRED_CARD);
+map.insertBefore(fragmentCard, mapFilters);
+map.classList.remove('map--faded');
