@@ -18,6 +18,15 @@ var AD_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'condi
 var AD_DESCRIPTION = ['Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.'];
 var AD_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
+var featuresTypes = {
+  WIFI: 'wifi',
+  DISHWASHER: 'dishwasher',
+  PARKING: 'parking',
+  WASHER: 'washer',
+  ELEVATOR: 'elevator',
+  CONDITIONER: 'conditioner'
+};
+
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -37,7 +46,13 @@ var getRAndomElementsArr = function (arr) {
 
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+var form = document.querySelector('.ad-form');
+var fieldsetForm = form.querySelectorAll('fieldset');
+if (form.classList.contains('ad-form--disabled')) {
+  for (var i = 0; i < fieldsetForm.length; i++) {
+    fieldsetForm[i].disabled = true;
+  }
+}
 
 var createListAds = function () {
   var listAds = [];
@@ -119,12 +134,9 @@ var userPinList = document.querySelector('.map__pins');
 var mapFilters = document.querySelector('.map__filters-container');
 userPinList.appendChild(fragmentPin);
 
-var createCardPopup = function (index) {
-  var avatar = ads[index].author.avatar;
-  var title = ads[index].offer.title;
-  var price = ads[index].offer.price;
+var getOfferTranslationByType = function (offerType) {
   var type = '';
-  switch (ads[index].offer.type) {
+  switch (offerType) {
     case 'flat':
       type = 'Квартира';
       break;
@@ -140,35 +152,44 @@ var createCardPopup = function (index) {
     default:
       type = undefined;
   }
-  var rooms = ads[index].offer.rooms;
-  var guests = ads[index].offer.guests;
-  var checkin = ads[index].offer.checkin;
-  var checkout = ads[index].offer.checkout;
-  var features = ads[index].offer.features;
-  var description = ads[index].offer.description;
-  var photos = ads[index].offer.photos;
+  return type;
+};
+
+var createCardPopup = function (obj) {
+  var avatar = obj.author.avatar;
+  var title = obj.offer.title;
+  var price = obj.offer.price;
+  var type = getOfferTranslationByType(obj.offer.type);
+  var rooms = obj.offer.rooms;
+  var guests = obj.offer.guests;
+  var checkin = obj.offer.checkin;
+  var checkout = obj.offer.checkout;
+  var features = obj.offer.features;
+  var description = obj.offer.description;
+  var photos = obj.offer.photos;
 
   for (var k = 0; k < features.length; k++) {
     var сardFeature = document.createElement('li');
     var classFeature = '';
     сardFeature.classList.add('popup__feature');
+
     switch (features[k]) {
-      case 'wifi':
+      case featuresTypes.WIFI:
         classFeature = 'popup__feature--wifi';
         break;
-      case 'dishwasher':
+      case featuresTypes.DISHWASHER:
         classFeature = 'popup__feature--dishwasher';
         break;
-      case 'parking':
+      case featuresTypes.PARKING:
         classFeature = 'popup__feature--parking';
         break;
-      case 'washer':
+      case featuresTypes.WASHER:
         classFeature = 'popup__feature--washer';
         break;
-      case 'elevator':
+      case featuresTypes.ELEVATOR:
         classFeature = 'popup__feature--elevator';
         break;
-      case 'conditioner':
+      case featuresTypes.CONDITIONER:
         classFeature = 'popup__feature--conditioner';
         break;
       default:
@@ -200,6 +221,6 @@ var createCardPopup = function (index) {
   fragmentCard.appendChild(userCardElement);
 };
 
-createCardPopup(INDEX_DESIRED_CARD);
+createCardPopup(ads[INDEX_DESIRED_CARD]);
 map.insertBefore(fragmentCard, mapFilters);
-map.classList.remove('map--faded');
+// map.classList.remove('map--faded');
