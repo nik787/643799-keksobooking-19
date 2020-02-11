@@ -1,5 +1,7 @@
 'use strict';
 
+var ENTER_KEY = 'Enter';
+var KEY_LEFT_MOUSE_BUTTON = 0;
 var QUANTITY_OBJECTS = 8;
 var INDEX_DESIRED_CARD = 0;
 var MIN_AMOUNT = 1;
@@ -27,6 +29,33 @@ var featuresTypes = {
   CONDITIONER: 'conditioner'
 };
 
+var map = document.querySelector('.map');
+var form = document.querySelector('.ad-form');
+var fieldsetForm = form.querySelectorAll('fieldset');
+var mapFilters = document.querySelector('.map__filters');
+var mainPin = document.querySelector('.map__pin--main');
+
+var userPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var userPinImg = userPinTemplate.querySelector('img');
+var fragmentPin = document.createDocumentFragment();
+
+var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var userCardTitle = userCardTemplate.querySelector('.popup__title');
+var userCardPrice = userCardTemplate.querySelector('.popup__text--price');
+var userCardType = userCardTemplate.querySelector('.popup__type');
+var userCardCapacity = userCardTemplate.querySelector('.popup__text--capacity');
+var userCardTime = userCardTemplate.querySelector('.popup__text--time');
+var userCardFeatures = userCardTemplate.querySelector('.popup__features');
+var userCardDescription = userCardTemplate.querySelector('.popup__description');
+var userCardPhotos = userCardTemplate.querySelector('.popup__photos');
+var userCardAvatar = userCardTemplate.querySelector('.popup__avatar');
+
+var userCardFeature = userCardFeatures.children;
+var userCardPhoto = userCardPhotos.children;
+
+var userPinList = document.querySelector('.map__pins');
+// var mapFiltersContainer = document.querySelector('.map__filters-container');
+
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -44,27 +73,24 @@ var getRAndomElementsArr = function (arr) {
   return newArr;
 };
 
-
-var map = document.querySelector('.map');
-var form = document.querySelector('.ad-form');
-var fieldsetForm = form.querySelectorAll('fieldset');
-if (form.classList.contains('ad-form--disabled')) {
-  for (var i = 0; i < fieldsetForm.length; i++) {
-    fieldsetForm[i].disabled = true;
+var switchDisabled = function (arr, bolean) {
+  for (var i = 0; i < arr.length; i++) {
+    var itemSwitch = arr[i];
+    itemSwitch.disabled = bolean;
   }
-}
+};
 
 var createListAds = function () {
   var listAds = [];
-  for (var i = 0; i < QUANTITY_OBJECTS; i++) {
+  for (var j = 0; j < QUANTITY_OBJECTS; j++) {
 
-    listAds[i] = {
+    listAds[j] = {
       author: {
         avatar: getRandomElementArr(AD_AVATARS),
       },
 
       offer: {
-        title: AD_TITLE[i], // строка, заголовок предложения
+        title: AD_TITLE[j], // строка, заголовок предложения
         address: location.x + ', ' + location.y, // строка, адрес предложения
         price: AD_PRICE, // число, стоимость
         type: getRandomElementArr(AD_TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
@@ -86,53 +112,6 @@ var createListAds = function () {
   }
   return listAds;
 };
-
-var ads = createListAds();
-
-var userPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var userPinImg = userPinTemplate.querySelector('img');
-var fragmentPin = document.createDocumentFragment();
-
-var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-var userCardTitle = userCardTemplate.querySelector('.popup__title');
-var userCardPrice = userCardTemplate.querySelector('.popup__text--price');
-var userCardType = userCardTemplate.querySelector('.popup__type');
-var userCardCapacity = userCardTemplate.querySelector('.popup__text--capacity');
-var userCardTime = userCardTemplate.querySelector('.popup__text--time');
-var userCardFeatures = userCardTemplate.querySelector('.popup__features');
-var userCardDescription = userCardTemplate.querySelector('.popup__description');
-var userCardPhotos = userCardTemplate.querySelector('.popup__photos');
-var userCardAvatar = userCardTemplate.querySelector('.popup__avatar');
-
-var userCardFeature = userCardFeatures.children;
-var userCardPhoto = userCardPhotos.children;
-
-for (var z = userCardFeature.length - 1; z >= 0; z--) {
-  var childFeature = userCardFeature[z];
-  childFeature.parentElement.removeChild(childFeature);
-}
-
-for (var j = userCardPhoto.length - 1; j >= 0; j--) {
-  var childPhoto = userCardPhoto[j];
-  childPhoto.parentElement.removeChild(childPhoto);
-}
-
-
-var fragmentCard = document.createDocumentFragment();
-
-for (var i = 0; i < ads.length; i++) {
-  userPinTemplate.style.left = ads[i].location.x - PIN_WIDTH / 2 + 'px';
-  userPinTemplate.style.top = ads[i].location.y + 'px';
-
-  userPinImg.src = ads[i].author.avatar;
-  userPinImg.alt = ads[i].offer.title;
-  var userPinElement = userPinTemplate.cloneNode(true);
-  fragmentPin.appendChild(userPinElement);
-}
-
-var userPinList = document.querySelector('.map__pins');
-var mapFilters = document.querySelector('.map__filters-container');
-userPinList.appendChild(fragmentPin);
 
 var getOfferTranslationByType = function (offerType) {
   var type = '';
@@ -168,12 +147,12 @@ var createCardPopup = function (obj) {
   var description = obj.offer.description;
   var photos = obj.offer.photos;
 
-  for (var k = 0; k < features.length; k++) {
+  for (var n = 0; n < features.length; n++) {
     var сardFeature = document.createElement('li');
     var classFeature = '';
     сardFeature.classList.add('popup__feature');
 
-    switch (features[k]) {
+    switch (features[n]) {
       case featuresTypes.WIFI:
         classFeature = 'popup__feature--wifi';
         break;
@@ -199,13 +178,13 @@ var createCardPopup = function (obj) {
     userCardFeatures.appendChild(сardFeature);
   }
 
-  for (var m = 0; m < photos.length; m++) {
+  for (var p = 0; p < photos.length; p++) {
     var cardImage = document.createElement('img');
     cardImage.classList.add('popup__photo');
     cardImage.width = '45';
     cardImage.height = '40';
     cardImage.alt = 'Фотография жилья';
-    cardImage.src = photos[m];
+    cardImage.src = photos[p];
     userCardPhotos.appendChild(cardImage);
   }
 
@@ -221,6 +200,55 @@ var createCardPopup = function (obj) {
   fragmentCard.appendChild(userCardElement);
 };
 
+var ads = createListAds();
+
+for (var k = userCardFeature.length - 1; k >= 0; k--) {
+  var childFeature = userCardFeature[k];
+  childFeature.parentElement.removeChild(childFeature);
+}
+
+for (var l = userCardPhoto.length - 1; l >= 0; l--) {
+  var childPhoto = userCardPhoto[l];
+  childPhoto.parentElement.removeChild(childPhoto);
+}
+
+var fragmentCard = document.createDocumentFragment();
+
+for (var m = 0; m < ads.length; m++) {
+  userPinTemplate.style.left = ads[m].location.x - PIN_WIDTH / 2 + 'px';
+  userPinTemplate.style.top = ads[m].location.y + 'px';
+
+  userPinImg.src = ads[m].author.avatar;
+  userPinImg.alt = ads[m].offer.title;
+  var userPinElement = userPinTemplate.cloneNode(true);
+  fragmentPin.appendChild(userPinElement);
+}
 createCardPopup(ads[INDEX_DESIRED_CARD]);
-map.insertBefore(fragmentCard, mapFilters);
-// map.classList.remove('map--faded');
+
+
+var onActivateInterface = function () {
+  switchDisabled(fieldsetForm, false);
+  switchDisabled(mapFilters.children, false);
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+
+  userPinList.appendChild(fragmentPin);
+  // map.insertBefore(fragmentCard, mapFiltersContainer);
+};
+
+var onPinEnterPress = function (evt) {
+  if (evt.key === ENTER_KEY) {
+    onActivateInterface();
+  }
+};
+
+var onPinLeftClick = function (evt) {
+  if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
+    onActivateInterface();
+  }
+};
+
+mainPin.addEventListener('mousedown', onPinLeftClick);
+
+
+mainPin.addEventListener('keydown', onPinEnterPress);
