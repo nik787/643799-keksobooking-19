@@ -2,14 +2,20 @@
 
 var ENTER_KEY = 'Enter';
 var KEY_LEFT_MOUSE_BUTTON = 0;
+var MAP_WIDTH = 1200;
+var LOCATION_MINY = 130;
+var LOCATION_MAXY = 630;
+var PIN_MAIN_WIDTH = 65;
+var PIN_MAIN_HEIGHT = 65;
+var PIN_MAIN_POINTER_HEIGHT = 20;
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+
 var QUANTITY_OBJECTS = 8;
 var INDEX_DESIRED_CARD = 0;
 var MIN_AMOUNT = 1;
 var MAX_AMOUNT = 5;
-var PIN_WIDTH = 50;
-var LOCATION_MINY = 130;
-var LOCATION_MINX = 630;
-var MAP_WIDTH = 1200;
+
 var AD_AVATARS = ['img/avatars/user01.png', 'img/avatars/user02.png', 'img/avatars/user03.png', 'img/avatars/user04.png', 'img/avatars/user05.png', 'img/avatars/user06.png', 'img/avatars/user07.png', 'img/avatars/user08.png'];
 var AD_TITLE = ['Уютное гнездышко для молодоженов 1', 'Уютное гнездышко для молодоженов 2', 'Уютное гнездышко для молодоженов 3', 'Уютное гнездышко для молодоженов 4', 'Уютное гнездышко для молодоженов 5', 'Уютное гнездышко для молодоженов 6', 'Уютное гнездышко для молодоженов 7', 'Уютное гнездышко для молодоженов 8'];
 var AD_PRICE = 5200;
@@ -34,6 +40,7 @@ var form = document.querySelector('.ad-form');
 var fieldsetForm = form.querySelectorAll('fieldset');
 var mapFilters = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
+var addrInput = form.querySelector('#address');
 
 var userPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var userPinImg = userPinTemplate.querySelector('img');
@@ -73,6 +80,30 @@ var getRAndomElementsArr = function (arr) {
   return newArr;
 };
 
+var getCoordinatePinMain = function (state) {
+  var active = state || false;
+
+  var currentMapPinMain = mainPin.getBoundingClientRect();
+
+  var currentMapPinMainX;
+  var currentMapPinMainY;
+  var result;
+
+  if (active) {
+    var currentMapPinMainHeight = PIN_MAIN_HEIGHT + PIN_MAIN_POINTER_HEIGHT;
+
+    currentMapPinMainX = currentMapPinMain.left + (PIN_MAIN_WIDTH / 2);
+    currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + currentMapPinMainHeight;
+  } else {
+    currentMapPinMainX = currentMapPinMain.left + (PIN_MAIN_WIDTH / 2);
+    currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + (PIN_MAIN_HEIGHT / 2);
+  }
+
+  result = Math.floor(currentMapPinMainX) + ', ' + Math.floor(currentMapPinMainY);
+
+  return result;
+};
+
 var switchDisabled = function (arr, bolean) {
   for (var i = 0; i < arr.length; i++) {
     var itemSwitch = arr[i];
@@ -106,7 +137,7 @@ var createListAds = function () {
       location: {
         x: getRandomInt(0, MAP_WIDTH), // случайное число, координата x метки на карте.
         // Значение ограничено размерами блока, в котором перетаскивается метка = 1200
-        y: getRandomInt(LOCATION_MINY, LOCATION_MINX) // случайное число, координата y метки на карте от 130 до 630
+        y: getRandomInt(LOCATION_MINY, LOCATION_MAXY) // случайное число, координата y метки на карте от 130 до 630
       }
     };
   }
@@ -216,7 +247,7 @@ var fragmentCard = document.createDocumentFragment();
 
 for (var m = 0; m < ads.length; m++) {
   userPinTemplate.style.left = ads[m].location.x - PIN_WIDTH / 2 + 'px';
-  userPinTemplate.style.top = ads[m].location.y + 'px';
+  userPinTemplate.style.top = ads[m].location.y - PIN_HEIGHT + 'px';
 
   userPinImg.src = ads[m].author.avatar;
   userPinImg.alt = ads[m].offer.title;
@@ -226,29 +257,32 @@ for (var m = 0; m < ads.length; m++) {
 createCardPopup(ads[INDEX_DESIRED_CARD]);
 
 
-var onActivateInterface = function () {
+var activateInterface = function () {
   switchDisabled(fieldsetForm, false);
   switchDisabled(mapFilters.children, false);
+
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
-
+  addrInput.value = getCoordinatePinMain(true);
   userPinList.appendChild(fragmentPin);
+
   // map.insertBefore(fragmentCard, mapFiltersContainer);
 };
 
 var onPinEnterPress = function (evt) {
   if (evt.key === ENTER_KEY) {
-    onActivateInterface();
+    activateInterface();
   }
 };
 
 var onPinLeftClick = function (evt) {
   if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
-    onActivateInterface();
+    activateInterface();
   }
 };
 
 mainPin.addEventListener('mousedown', onPinLeftClick);
 
-
 mainPin.addEventListener('keydown', onPinEnterPress);
+
+addrInput.value = getCoordinatePinMain();
