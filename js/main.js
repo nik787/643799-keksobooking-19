@@ -117,8 +117,10 @@ var switchDisabled = function (arr, bolean) {
 
 var createListAds = function () {
   var listAds = [];
-  for (var j = 0; j < QUANTITY_OBJECTS; j++) {
 
+  for (var j = 0; j < QUANTITY_OBJECTS; j++) {
+    var locationX = getRandomInt(0, MAP_WIDTH);
+    var locationY = getRandomInt(LOCATION_MINY, LOCATION_MAXY);
     listAds[j] = {
       author: {
         avatar: getRandomElementArr(AD_AVATARS),
@@ -126,7 +128,7 @@ var createListAds = function () {
 
       offer: {
         title: AD_TITLE[j], // строка, заголовок предложения
-        address: location.x + ', ' + location.y, // строка, адрес предложения
+        address: locationX + ', ' + locationY, // строка, адрес предложения
         price: AD_PRICE, // число, стоимость
         type: getRandomElementArr(AD_TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
         rooms: getRandomInt(MIN_AMOUNT, MAX_AMOUNT), // число, количество комнат
@@ -139,9 +141,9 @@ var createListAds = function () {
       },
 
       location: {
-        x: getRandomInt(0, MAP_WIDTH), // случайное число, координата x метки на карте.
+        x: locationX, // случайное число, координата x метки на карте.
         // Значение ограничено размерами блока, в котором перетаскивается метка = 1200
-        y: getRandomInt(LOCATION_MINY, LOCATION_MAXY) // случайное число, координата y метки на карте от 130 до 630
+        y: locationY // случайное число, координата y метки на карте от 130 до 630
       }
     };
   }
