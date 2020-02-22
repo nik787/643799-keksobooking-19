@@ -16,6 +16,10 @@ var INDEX_DESIRED_CARD = 0;
 var MIN_AMOUNT = 1;
 var MAX_AMOUNT = 5;
 
+// Форма
+var MIN_APPARTAMENT_PRICE = 0;
+var MAX_APPARTMENT_PRICE = 1000000;
+
 var AD_AVATARS = ['img/avatars/user01.png', 'img/avatars/user02.png', 'img/avatars/user03.png', 'img/avatars/user04.png', 'img/avatars/user05.png', 'img/avatars/user06.png', 'img/avatars/user07.png', 'img/avatars/user08.png'];
 var AD_TITLE = ['Уютное гнездышко для молодоженов 1', 'Уютное гнездышко для молодоженов 2', 'Уютное гнездышко для молодоженов 3', 'Уютное гнездышко для молодоженов 4', 'Уютное гнездышко для молодоженов 5', 'Уютное гнездышко для молодоженов 6', 'Уютное гнездышко для молодоженов 7', 'Уютное гнездышко для молодоженов 8'];
 var AD_PRICE = 5200;
@@ -280,6 +284,70 @@ var onPinLeftClick = function (evt) {
     activateInterface();
   }
 };
+
+var formTitleElement = form.querySelector('[name="title"]');
+var formPriceElement = form.querySelector('[name="price"]');
+var formApartmentTypeElement = form.querySelector('[name="type"]');
+var formTimeinElement = form.querySelector('[name="timein"]');
+var formTimeoutElement = form.querySelector('[name="timeout"]');
+var formTRoomsElement = form.querySelector('[name="rooms"]');
+var formGuestsElement = form.querySelector('[name="capacity"]');
+
+formTitleElement.required = true;
+formPriceElement.required = true;
+formPriceElement.setAttribute('min', formPriceElement.placeholder);
+formPriceElement.setAttribute('max', MAX_APPARTMENT_PRICE);
+
+function onApartmentTypeChange() {
+
+  switch (formApartmentTypeElement.value) {
+    case 'bungalo': MIN_APPARTAMENT_PRICE = 0;
+      break;
+    case 'flat': MIN_APPARTAMENT_PRICE = 1000;
+      break;
+    case 'house': MIN_APPARTAMENT_PRICE = 5000;
+      break;
+    case 'palace': MIN_APPARTAMENT_PRICE = 10000;
+  }
+
+  formPriceElement.setAttribute('min', MIN_APPARTAMENT_PRICE);
+  formPriceElement.setAttribute('placeholder', MIN_APPARTAMENT_PRICE);
+}
+
+function adjustmentTimeField(timeField, dependTimeField) {
+  dependTimeField.value = timeField.value;
+  dependTimeField.focus();
+}
+
+formGuestsElement.setCustomValidity('Данное количество комнат не рассчитано на столько гостей');
+
+function onGuestsAndRoomsChange() {
+  formGuestsElement.setCustomValidity('');
+
+  if (formTRoomsElement.value < formGuestsElement.value || formTRoomsElement.value === '100' || formGuestsElement.value === '0') {
+    formGuestsElement.setCustomValidity('Данное количество комнат не рассчитано на столько гостей');
+  }
+
+  if (formTRoomsElement.value === '100' && formGuestsElement.value === '0') {
+    formGuestsElement.setCustomValidity('');
+  }
+}
+
+formApartmentTypeElement.addEventListener('change', onApartmentTypeChange);
+formTimeinElement.addEventListener('change', function () {
+  adjustmentTimeField(formTimeinElement, formTimeoutElement);
+});
+formTimeoutElement.addEventListener('change', function () {
+  adjustmentTimeField(formTimeoutElement, formTimeinElement);
+});
+formGuestsElement.addEventListener('change', onGuestsAndRoomsChange);
+formTRoomsElement.addEventListener('change', onGuestsAndRoomsChange);
+
+form.addEventListener('reset', function () {
+  setTimeout(function () {
+    getCoordinatePinMain();
+  }, 50);
+});
 
 mainPin.addEventListener('mousedown', onPinLeftClick);
 
