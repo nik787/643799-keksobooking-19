@@ -17,6 +17,8 @@ var MIN_AMOUNT = 1;
 var MAX_AMOUNT = 5;
 
 // Форма
+var MIN_TITLE_CHARACTERS = 30;
+var MAX_TITLE_CHARACTERS = 100;
 var MIN_APPARTAMENT_PRICE = 0;
 var MAX_APPARTMENT_PRICE = 1000000;
 
@@ -297,6 +299,8 @@ var formGuestsElement = form.querySelector('[name="capacity"]');
 
 formTitleElement.required = true;
 formPriceElement.required = true;
+formTitleElement.setAttribute('minlength', MIN_TITLE_CHARACTERS);
+formTitleElement.setAttribute('maxlength', MAX_TITLE_CHARACTERS);
 formPriceElement.setAttribute('min', formPriceElement.placeholder);
 formPriceElement.setAttribute('max', MAX_APPARTMENT_PRICE);
 
