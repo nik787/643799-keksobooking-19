@@ -158,10 +158,12 @@ var createPinElements = function (ads) {
 
     userPinImg.src = ads[i].author.avatar;
     userPinImg.alt = ads[i].offer.title;
+    userPinElement.addEventListener('click', function () {
+      createCardPopup(ads[i]);
+    });
     userPinList.appendChild(userPinElement);
     currentPins.push(userPinElement);
   }
-  return currentPins;
 };
 
 var ads = createListAds();
@@ -227,13 +229,8 @@ var activateInterface = function () {
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
   addrInput.value = getCoordinatePinMain(true);
-  var currentPins = createPinElements(ads);
-  for (var i = 0; i < currentPins.length; i++) {
-    currentPins[i].addEventListener('click', function () {
-      createCardPopup(ads[i]);
+  createPinElements(ads);
 
-    });
-  }
   // currentPins.addEventListener('click', openCardPopup);
   map.insertBefore(fragmentCard, mapFiltersContainer);
 };
