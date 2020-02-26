@@ -336,17 +336,8 @@ var createCardPopup = function (objAds) {
   return userCardElement;
 };
 
-var createuserListCard = function (ads) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < ads.length; i++) {
-    fragment.appendChild(createCardPopup(ads[i]));
-  }
-  map.insertBefore(fragment, mapFiltersContainer);
-};
-
 var openCardPopup = function (adsObj) {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(createCardPopup(adsObj));
   map.insertBefore(fragment, mapFiltersContainer);
-
-}
+};
