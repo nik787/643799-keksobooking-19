@@ -158,11 +158,18 @@ var createPinElements = function (ads) {
 
     userPinImg.src = ads[i].author.avatar;
     userPinImg.alt = ads[i].offer.title;
-    userPinElement.addEventListener('click', function () {
-      createCardPopup(ads[i]);
-    });
+    (function () {
+      var adInfo = ads[i];
+      userPinElement.addEventListener('click', function () {
+
+        createCardPopup(adInfo);
+        map.insertBefore(fragmentCard, mapFiltersContainer);
+
+      });
+    })();
     userPinList.appendChild(userPinElement);
     currentPins.push(userPinElement);
+
   }
 };
 
@@ -232,7 +239,6 @@ var activateInterface = function () {
   createPinElements(ads);
 
   // currentPins.addEventListener('click', openCardPopup);
-  map.insertBefore(fragmentCard, mapFiltersContainer);
 };
 
 var formPriceElement = form.querySelector('[name="price"]');
@@ -368,4 +374,5 @@ var createCardPopup = function (objAds) {
 
   fragmentCard.appendChild(userCardElement);
 };
+
 
