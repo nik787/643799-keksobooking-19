@@ -68,15 +68,6 @@ var offersType = {
   PALACE: 'palace'
 };
 
-var featuresTypes = {
-  WIFI: 'wifi',
-  DISHWASHER: 'dishwasher',
-  PARKING: 'parking',
-  WASHER: 'washer',
-  ELEVATOR: 'elevator',
-  CONDITIONER: 'conditioner'
-};
-
 var map = document.querySelector('.map');
 var form = document.querySelector('.ad-form');
 var fieldsetForm = form.querySelectorAll('fieldset');
@@ -170,60 +161,6 @@ var createPinElements = function (ads) {
 
 var ads = createListAds();
 
-var getOfferTranslationByType = function (offerType) {
-  var type = '';
-  switch (offerType) {
-    case offersType.FLAT:
-      type = 'Квартира';
-      break;
-    case offersType.BUNGALO:
-      type = 'Бунгало';
-      break;
-    case offersType.HOUSE:
-      type = 'Дом';
-      break;
-    case offersType.PALACE:
-      type = 'Дворец';
-      break;
-    default:
-      type = undefined;
-  }
-  return type;
-};
-
-var getOfferTranslationByFeatures = function (features) {
-  for (var i = 0; i < features.length; i++) {
-    var сardFeature = document.createElement('li');
-    var classFeature = '';
-    сardFeature.classList.add('popup__feature');
-
-    switch (features[i]) {
-      case featuresTypes.WIFI:
-        classFeature = 'popup__feature--wifi';
-        break;
-      case featuresTypes.DISHWASHER:
-        classFeature = 'popup__feature--dishwasher';
-        break;
-      case featuresTypes.PARKING:
-        classFeature = 'popup__feature--parking';
-        break;
-      case featuresTypes.WASHER:
-        classFeature = 'popup__feature--washer';
-        break;
-      case featuresTypes.ELEVATOR:
-        classFeature = 'popup__feature--elevator';
-        break;
-      case featuresTypes.CONDITIONER:
-        classFeature = 'popup__feature--conditioner';
-        break;
-      default:
-        classFeature = '';
-    }
-    сardFeature.classList.add(classFeature);
-    userCardFeatures.appendChild(сardFeature);
-  }
-};
-
 var activateInterface = function () {
   switchDisabled(fieldsetForm, false);
   switchDisabled(mapFilters.children, false);
@@ -232,7 +169,6 @@ var activateInterface = function () {
   form.classList.remove('ad-form--disabled');
   addrInput.value = getCoordinatePinMain(true);
   createPinElements(ads);
-
 };
 
 var formPriceElement = form.querySelector('[name="price"]');
@@ -305,12 +241,17 @@ addrInput.value = getCoordinatePinMain();
 
 // Попап карточки
 var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-var userCardFeatures = userCardTemplate.querySelector('.popup__features');
-
-var userCardFeature = userCardFeatures.children;
 
 var createCardPopup = function (objAds) {
   var userCardElement = userCardTemplate.cloneNode(true);
+
+  var userCardTitle = userCardElement.querySelector('.popup__title');
+  var userCardPrice = userCardElement.querySelector('.popup__text--price');
+  var userCardType = userCardElement.querySelector('.popup__type');
+  var userCardCapacity = userCardElement.querySelector('.popup__text--capacity');
+  var userCardTime = userCardElement.querySelector('.popup__text--time');
+  var userCardDescription = userCardElement.querySelector('.popup__description');
+  var userCardAvatar = userCardElement.querySelector('.popup__avatar');
 
   var avatar = objAds.author.avatar;
   var title = objAds.offer.title;
@@ -320,19 +261,46 @@ var createCardPopup = function (objAds) {
   var guests = objAds.offer.guests;
   var checkin = objAds.offer.checkin;
   var checkout = objAds.offer.checkout;
-  var features = objAds.offer.features;
   var description = objAds.offer.description;
   var photos = objAds.offer.photos;
+  var features = objAds.offer.features;
 
-  getOfferTranslationByFeatures(features);
 
-  userCardElement.querySelector('.popup__title').innerHTML = title;
-  userCardElement.querySelector('.popup__text--price').innerHTML = price + '₽/ночь';
-  userCardElement.querySelector('.popup__type').innerHTML = type;
-  userCardElement.querySelector('.popup__text--capacity').innerHTML = rooms + ' комнаты для ' + guests + ' гостей';
-  userCardElement.querySelector('.popup__text--time').innerHTML = 'заезд после ' + checkin + ', выезд до ' + checkout;
-  userCardElement.querySelector('.popup__description').innerHTML = description;
-  userCardElement.querySelector('.popup__avatar').src = avatar;
+  userCardTitle.innerHTML = title;
+  userCardPrice.innerHTML = price + '₽/ночь';
+  userCardType.innerHTML = type;
+  userCardCapacity.innerHTML = rooms + ' комнаты для ' + guests + ' гостей';
+  userCardTime.innerHTML = 'заезд после ' + checkin + ', выезд до ' + checkout;
+  userCardDescription.innerHTML = description;
+  userCardAvatar.src = avatar;
+
+  if (features.length > 0) {
+    var featuresList = userCardElement.querySelector('.popup__features');
+    var featureFromHTML = featuresList.querySelector('.popup__feature');
+    featuresList.innerHTML = '';
+    for (var featureIndex = 0; featureIndex < features.length; featureIndex++) {
+      var feature = featureFromHTML.cloneNode(true);
+      feature.classList.remove('popup__feature--wifi');
+      feature.classList.add('popup__feature--' + features[featureIndex]);
+      featuresList.appendChild(feature);
+    }
+  } else {
+    featuresList.classList.add('hidden');
+  }
+
+  if (photos.length > 0) {
+    var photoList = userCardElement.querySelector('.popup__photos');
+    var photoFromHTML = photoList.querySelector('.popup__photo');
+    photoList.innerHTML = '';
+    for (var photoIndex = 0; photoIndex < photos.length; photoIndex++) {
+      var photo = photoFromHTML.cloneNode(true);
+      photo.src = photos[photoIndex];
+      photoList.appendChild(photo);
+    }
+  } else {
+    photoList.classList.add('hidden');
+  }
+
   return userCardElement;
 };
 
@@ -340,4 +308,25 @@ var openCardPopup = function (adsObj) {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(createCardPopup(adsObj));
   map.insertBefore(fragment, mapFiltersContainer);
+};
+
+var getOfferTranslationByType = function (offerType) {
+  var type = '';
+  switch (offerType) {
+    case offersType.FLAT:
+      type = 'Квартира';
+      break;
+    case offersType.BUNGALO:
+      type = 'Бунгало';
+      break;
+    case offersType.HOUSE:
+      type = 'Дом';
+      break;
+    case offersType.PALACE:
+      type = 'Дворец';
+      break;
+    default:
+      type = undefined;
+  }
+  return type;
 };
