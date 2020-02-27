@@ -147,6 +147,7 @@ var createPinElement = function (obj) {
 
   userPinElement.addEventListener('click', function () {
     openCardPopup(obj);
+    userPinElement.classList.add('map__pin--active');
   });
   return userPinElement;
 };
@@ -244,6 +245,7 @@ var userCardTemplate = document.querySelector('#card').content.querySelector('.m
 
 var createCardPopup = function (objAds) {
   var userCardElement = userCardTemplate.cloneNode(true);
+  // var closeButtonUserCard = userCardElement.querySelector('popup__close');
 
   var userCardTitle = userCardElement.querySelector('.popup__title');
   var userCardPrice = userCardElement.querySelector('.popup__text--price');
@@ -301,6 +303,10 @@ var createCardPopup = function (objAds) {
     photoList.classList.add('hidden');
   }
 
+  // closeButtonUserCard.addEventListener('click', function (evt) {
+
+  // });
+
   return userCardElement;
 };
 
@@ -309,6 +315,10 @@ var openCardPopup = function (adsObj) {
   fragment.appendChild(createCardPopup(adsObj));
   map.insertBefore(fragment, mapFiltersContainer);
 };
+
+// var onCloseCardPopup = function () {
+
+// };
 
 var getOfferTranslationByType = function (offerType) {
   var type = '';
