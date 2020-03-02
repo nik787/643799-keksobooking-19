@@ -36,7 +36,6 @@ var AdPrice = {
   MAX: 1000000
 };
 
-// var AD_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var AD_TIME = ['12:00', '13:00', '14:00'];
 var AD_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var AD_DESCRIPTION = [
@@ -56,7 +55,8 @@ var OffersType = {
 };
 
 /**
- * Функция создает рандомное число из диапозона min, max
+ * @name getRandomInt
+ * @description Функция создает рандомное число из диапозона min, max
  * @param {number} min Минимальное число
  * @param {number} max Максимальное число
  * @return {number} Рандомное число
@@ -66,7 +66,8 @@ var getRandomInt = function (min, max) {
 };
 
 /**
- * Функция возвращяет рандомный элемент массива от 0 до длинны массива
+ * @name getRandomElementArr
+ * @description Функция возвращяет рандомный элемент массива от 0 до длинны массива
  * @param {Array} arr Массив данных
  * @return {Array} Рандомный элемент массива
  *
@@ -76,21 +77,25 @@ var getRandomElementArr = function (arr) {
 };
 
 /**
- * Функция возвращяет рандомный массив элементов от 1 до длинны массива
+ * @name getRandomElementsArr
+ * @description Функция возвращяет рандомный массив элементов от 1 до длинны массива
  * @param {Array} arr Массив данных
  * @return {Array} Новый рандомный массив
  */
-var getRAndomElementsArr = function (arr) {
+var getRandomElementsArr = function (arr) {
   var minElements = 1;
+  var oldArr = arr;
   var newArr = [];
   for (var i = 0; i < getRandomInt(minElements, arr.length); i++) {
-    newArr[i] = arr[i];
+    newArr.push(oldArr[i]);
+    oldArr.splice(i, 1);
   }
   return newArr;
 };
 
 /**
- * Функция устанавливает disabled true/false на элеметы массива
+ * @name switchDisabled
+ * @description Функция устанавливает disabled true/false на html элеметы
  * @param {Array} htmlElements Массив html элеметов
  * @param {boolean} switching Включает/Отключает disabled
  * @description true - disabled включен, false - disabled отключен
@@ -98,30 +103,27 @@ var getRAndomElementsArr = function (arr) {
 var switchDisabled = function (htmlElements, switching) {
   // htmlElements.forEach(function (htmlElement) {
   //   htmlElement.disabled = switching;
-  // }); Не работает, узнать почему
+  // }); НЕ РАБОТАЕТ!!!
   for (var i = 0; i < htmlElements.length; i++) {
     htmlElements[i].disabled = switching;
   }
 };
 
-var getCoordinatePinMain = function (state) {
-  var isActivePin = state || false;
-
-  var currentMapPinMain = mainPin.getBoundingClientRect();
-
-  var currentMapPinMainX;
-  var currentMapPinMainY;
+/**
+ * @name getCoordinatePinMain
+ * @description Функция находит координаты пина и проверяет активирован ли интерфейс, в зависимости от этого изменяет значение
+ * @return {String} Возвращает строку с координатами главного пина 'x, y'
+ */
+var getCoordinatePinMain = function () {
+  var currentMapPinMainX = Math.round(window.mainPin.offsetLeft + (MainPin.WIDTH / 2));
+  var currentMapPinMainYDisabled = Math.round(window.mainPin.offsetTop + (MainPin.HEIGHT / 2));
+  var currentMapPinMainY = Math.round(window.mainPin.offsetTop + (MainPin.HEIGHT + MainPin.POINTER_HEIGHT));
   var result;
-
-  if (isActivePin) {
-    var currentMapPinMainHeight = MainPin.HEIGHT + MainPin.POINTER_HEIGHT;
-    currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + currentMapPinMainHeight;
+  if (activateInterface) {
+    result = currentMapPinMainX + ', ' + currentMapPinMainY;
   } else {
-    currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + (MainPin.HEIGHT / 2);
+    result = currentMapPinMainX + ', ' + currentMapPinMainYDisabled;
   }
-  currentMapPinMainX = currentMapPinMain.left + (MainPin.WIDTH / 2);
-  result = Math.floor(currentMapPinMainX) + ', ' + Math.floor(currentMapPinMainY);
-
   return result;
 };
 
@@ -157,9 +159,9 @@ var createListAds = function (count) {
         guests: getRandomInt(MIN_AMOUNT, MAX_AMOUNT),
         checkin: getRandomElementArr(AD_TIME),
         checkout: getRandomElementArr(AD_TIME),
-        features: getRAndomElementsArr(AD_FEATURES),
+        features: getRandomElementsArr(AD_FEATURES),
         description: getRandomElementArr(AD_DESCRIPTION),
-        photos: getRAndomElementsArr(AD_PHOTOS)
+        photos: getRandomElementsArr(AD_PHOTOS)
       },
 
       location: {
@@ -176,45 +178,43 @@ var ads = createListAds(QUANTITY_OBJECTS);
 
 var userPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var userPinList = document.querySelector('.map__pins');
-var createPinElement = function (pinData) {
-  var userPinElement = userPinTemplate.cloneNode(true);
-  userPinElement.querySelector('img').src = pinData.author.avatar;
-  userPinElement.querySelector('img').alt = pinData.offer.title;
 
-  userPinElement.style.left = pinData.location.x - Pin.WIDTH / 2 + 'px';
-  userPinElement.style.top = pinData.location.y - Pin.HEIGHT + 'px';
+var createPinElement = function (dataAds) {
+  var userPinElement = userPinTemplate.cloneNode(true);
+  userPinElement.querySelector('img').src = dataAds.author.avatar;
+  userPinElement.querySelector('img').alt = dataAds.offer.title;
+
+  userPinElement.style.left = dataAds.location.x - Pin.WIDTH / 2 + 'px';
+  userPinElement.style.top = dataAds.location.y - Pin.HEIGHT + 'px';
 
   userPinElement.addEventListener('click', function () {
-    createCardPopup(pinData);
+    createCardPopup(dataAds);
     userPinElement.classList.add('map__pin--active');
   });
   return userPinElement;
 };
-// Переписать цикл на forEach
+
 var createPinElements = function (dataAds) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < dataAds.length; i++) {
-    fragment.appendChild(createPinElement(dataAds[i]));
-  }
+  dataAds.forEach(function (element) {
+    fragment.appendChild(createPinElement(element));
+  });
   userPinList.appendChild(fragment);
 };
 
 var map = document.querySelector('.map');
 var form = document.querySelector('.ad-form');
+var mainPin = document.querySelector('.map__pin--main');
+mainPin.addEventListener('mousedown', onPinLeftClick);
+mainPin.addEventListener('keydown', onPinEnterPress);
 
 var fieldsetForm = form.querySelectorAll('fieldset');
 var mapFilters = document.querySelector('.map__filters');
 switchDisabled(fieldsetForm, true);
 switchDisabled(mapFilters.children, true);
 
-var mainPin = document.querySelector('.map__pin--main');
-mainPin.addEventListener('mousedown', onPinLeftClick);
-mainPin.addEventListener('keydown', onPinEnterPress);
-
 var addrInput = form.querySelector('#address');
 addrInput.value = getCoordinatePinMain();
-
-var mapFiltersContainer = document.querySelector('.map__filters-container');
 
 var formPriceElement = form.querySelector('[name="price"]');
 var formApartmentTypeElement = form.querySelector('[name="type"]');
@@ -276,8 +276,6 @@ form.addEventListener('reset', function () {
   }, 50);
 });
 
-
-// Попап карточки
 var userCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
 var createCardPopup = function (objAds) {
@@ -294,45 +292,48 @@ var createCardPopup = function (objAds) {
   var features = objAds.offer.features;
   var photos = objAds.offer.photos;
 
+  var featuresList = userCardElement.querySelector('.popup__features');
+  var featureFromHTML = featuresList.querySelector('.popup__feature');
+
   if (features) {
-    var featuresList = userCardElement.querySelector('.popup__features');
-    var featureFromHTML = featuresList.querySelector('.popup__feature');
     featuresList.innerHTML = '';
-    for (var featureIndex = 0; featureIndex < features.length; featureIndex++) {
+    features.forEach(function (element) {
       var feature = featureFromHTML.cloneNode(true);
       feature.classList.remove('popup__feature--wifi');
-      feature.classList.add('popup__feature--' + features[featureIndex]);
+      feature.classList.add('popup__feature--' + element);
       featuresList.appendChild(feature);
-    }
+    });
   } else {
-    featuresList.classList.add('hidden');
+    featuresList.remove();
   }
-
+  var photoList = userCardElement.querySelector('.popup__photos');
+  var photoFromHTML = photoList.querySelector('.popup__photo');
+  photoList.innerHTML = '';
   if (photos.length > 0) {
-    var photoList = userCardElement.querySelector('.popup__photos');
-    var photoFromHTML = photoList.querySelector('.popup__photo');
-    photoList.innerHTML = '';
-    for (var photoIndex = 0; photoIndex < photos.length; photoIndex++) {
+    photos.forEach(function (element) {
       var photo = photoFromHTML.cloneNode(true);
-      photo.src = photos[photoIndex];
+      photo.src = element;
       photoList.appendChild(photo);
-    }
+    });
   } else {
-    photoList.classList.add('hidden');
+    photoList.remove();
   }
 
+  var mapFiltersContainer = document.querySelector('.map__filters-container');
   map.insertBefore(userCardElement, mapFiltersContainer);
 };
 
+getCoordinatePinMain(false);
 var activateInterface = function () {
   switchDisabled(fieldsetForm, false);
   switchDisabled(mapFilters.children, false);
 
+
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
-  addrInput.value = getCoordinatePinMain(true);
   createPinElements(ads);
   formGuestsElement.setCustomValidity('Данное количество комнат не рассчитано на столько гостей');
   mainPin.removeEventListener('keydown', onPinEnterPress);
   mainPin.removeEventListener('click', onPinLeftClick);
+  addrInput.value = getCoordinatePinMain();
 };
