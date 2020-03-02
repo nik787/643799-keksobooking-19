@@ -127,13 +127,13 @@ var getCoordinatePinMain = function () {
   return result;
 };
 
-var onPinEnterPress = function (evt) {
+var onMainPinEnterPress = function (evt) {
   if (evt.key === ENTER_KEY) {
     activateInterface();
   }
 };
 
-var onPinLeftClick = function (evt) {
+var onMainPinLeftClick = function (evt) {
   if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
     activateInterface();
   }
@@ -179,8 +179,10 @@ var ads = createListAds(QUANTITY_OBJECTS);
 var userPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var userPinList = document.querySelector('.map__pins');
 
+
 var createPinElement = function (dataAds) {
   var userPinElement = userPinTemplate.cloneNode(true);
+
   userPinElement.querySelector('img').src = dataAds.author.avatar;
   userPinElement.querySelector('img').alt = dataAds.offer.title;
 
@@ -205,8 +207,8 @@ var createPinElements = function (dataAds) {
 var map = document.querySelector('.map');
 var form = document.querySelector('.ad-form');
 var mainPin = document.querySelector('.map__pin--main');
-mainPin.addEventListener('mousedown', onPinLeftClick);
-mainPin.addEventListener('keydown', onPinEnterPress);
+mainPin.addEventListener('mousedown', onMainPinLeftClick);
+mainPin.addEventListener('keydown', onMainPinEnterPress);
 
 var fieldsetForm = form.querySelectorAll('fieldset');
 var mapFilters = document.querySelector('.map__filters');
@@ -280,6 +282,10 @@ var userCardTemplate = document.querySelector('#card').content.querySelector('.m
 
 var createCardPopup = function (objAds) {
   var userCardElement = userCardTemplate.cloneNode(true);
+  var userCardClose = userCardElement.querySelector('.popup__close');
+  userCardClose.addEventListener('click', function () {
+    userCardElement.remove();
+  });
 
   userCardElement.querySelector('.popup__title').textContent = objAds.offer.title;
   userCardElement.querySelector('.popup__text--price').textContent = objAds.offer.price + '₽/ночь';
@@ -333,7 +339,7 @@ var activateInterface = function () {
   form.classList.remove('ad-form--disabled');
   createPinElements(ads);
   formGuestsElement.setCustomValidity('Данное количество комнат не рассчитано на столько гостей');
-  mainPin.removeEventListener('keydown', onPinEnterPress);
-  mainPin.removeEventListener('click', onPinLeftClick);
+  mainPin.removeEventListener('keydown', onMainPinEnterPress);
+  mainPin.removeEventListener('click', onMainPinLeftClick);
   addrInput.value = getCoordinatePinMain();
 };
