@@ -54,9 +54,6 @@
    * @param {boolean} switching Включает/Отключает disabled
   */
   var switchDisabled = function (htmlElements, switching) {
-    // htmlElements.forEach(function (htmlElement) {
-    //   htmlElement.disabled = switching;
-    // }); НЕ РАБОТАЕТ!!!
     for (var i = 0; i < htmlElements.length; i++) {
       htmlElements[i].disabled = switching;
     }

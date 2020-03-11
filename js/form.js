@@ -68,12 +68,13 @@
       formTRoomsElement.addEventListener('change', onGuestsAndRoomsChange);
       form.addEventListener('reset', function () {
         setTimeout(function () {
-          window.utils.getCoordinatePinMain(false);
+          window.map.disabled();
         }, 50);
       });
     } else {
       window.utils.switchDisabled(window.form.fieldsetForm, true);
       window.utils.switchDisabled(window.form.mapFilters, true);
+      form.classList.add('ad-form--disabled');
     }
   };
 
