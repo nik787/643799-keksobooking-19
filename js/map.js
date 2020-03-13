@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ENTER_KEY = 'Enter';
-  var KEY_LEFT_MOUSE_BUTTON = 0;
   var Сoordinates = {
     X_MIN: 0,
     X_MAX: 1200,
@@ -19,13 +17,13 @@
   var mainPin = document.querySelector('.map__pin--main');
 
   var onMainPinEnterPress = function (evt) {
-    if (evt.key === ENTER_KEY) {
+    if (evt.key === window.utils.enter) {
       activateInterface();
     }
   };
 
   var onMainPinLeftClick = function (evt) {
-    if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
+    if (evt.button === window.utils.mouseLeft) {
       activateInterface();
     }
   };

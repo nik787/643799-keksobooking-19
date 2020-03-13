@@ -51,26 +51,83 @@
     }
   };
 
+  formApartmentTypeElement.addEventListener('change', onApartmentTypeChange);
+
+  formTimeinElement.addEventListener('change', function () {
+    adjustmentTimeField(formTimeinElement, formTimeoutElement);
+  });
+
+  formTimeoutElement.addEventListener('change', function () {
+    adjustmentTimeField(formTimeoutElement, formTimeinElement);
+  });
+
+  formGuestsElement.addEventListener('change', onGuestsAndRoomsChange);
+
+  formTRoomsElement.addEventListener('change', onGuestsAndRoomsChange);
+
+  form.addEventListener('reset', function () {
+    setTimeout(function () {
+      window.map.disabled();
+    }, 50);
+  });
+
+  var main = document.querySelector('main');
+  var successSend = function () {
+    var successPopupTemplate = document.querySelector('#success').content.querySelector('.success');
+    var successPopup = successPopupTemplate.cloneNode(true);
+    successPopup.id = 'message';
+    main.appendChild(successPopup);
+    document.addEventListener('mousedown', onMessageCloseMousedown);
+    document.addEventListener('keydown', onMessageCloseKeydown);
+  };
+
+  var errorSend = function () {
+    var errorPopupTemplate = document.querySelector('#error').content.querySelector('.error');
+    var errorPopup = errorPopupTemplate.cloneNode(true);
+    errorPopup.id = 'message';
+    main.appendChild(errorPopup);
+
+    errorPopup.querySelector('.error__button').addEventListener('click', onMessageCloseClick);
+    document.addEventListener('mousedown', onMessageCloseMousedown);
+    document.addEventListener('keydown', onMessageCloseKeydown);
+  };
+
+  function onMessageCloseMousedown(e) {
+    if (e.button === window.utils.mouseLeft) {
+      removeMessage();
+    }
+  }
+
+  function onMessageCloseKeydown(e) {
+    if (e.key === window.utils.escape) {
+      removeMessage();
+    }
+  }
+
+  function onMessageCloseClick(e) {
+    e.preventDefault();
+    removeMessage();
+  }
+
+  function removeMessage() {
+    document.querySelector('#message').remove();
+    document.removeEventListener('mousedown', onMessageCloseMousedown);
+    document.removeEventListener('keydown', onMessageCloseKeydown);
+  }
+
+  form.addEventListener('submit', function (evt) {
+    window.push(new FormData(form), successSend, errorSend);
+    window.map.disabled();
+    form.reset();
+    evt.preventDefault();
+  });
+
   var validityForm = function (stateInterface) {
     if (stateInterface) {
       window.utils.switchDisabled(window.form.fieldsetForm, false);
       window.utils.switchDisabled(window.form.mapFilters, false);
       form.classList.remove('ad-form--disabled');
       formGuestsElement.setCustomValidity('Данное количество комнат не рассчитано на столько гостей');
-      formApartmentTypeElement.addEventListener('change', onApartmentTypeChange);
-      formTimeinElement.addEventListener('change', function () {
-        adjustmentTimeField(formTimeinElement, formTimeoutElement);
-      });
-      formTimeoutElement.addEventListener('change', function () {
-        adjustmentTimeField(formTimeoutElement, formTimeinElement);
-      });
-      formGuestsElement.addEventListener('change', onGuestsAndRoomsChange);
-      formTRoomsElement.addEventListener('change', onGuestsAndRoomsChange);
-      form.addEventListener('reset', function () {
-        setTimeout(function () {
-          window.map.disabled();
-        }, 50);
-      });
     } else {
       window.utils.switchDisabled(window.form.fieldsetForm, true);
       window.utils.switchDisabled(window.form.mapFilters, true);

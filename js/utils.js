@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var ENTER_KEY = 'Enter';
+  var KEY_LEFT_MOUSE_BUTTON = 0;
+  var ESCAPE = 'Escape';
+
   var MainPin = {
     WIDTH: 65,
     HEIGHT: 65,
@@ -81,6 +85,9 @@
   };
 
   window.utils = {
+    enter: ENTER_KEY,
+    mouseLeft: KEY_LEFT_MOUSE_BUTTON,
+    escape: ESCAPE,
     getRandomInt: getRandomInt,
     getRandomElementArr: getRandomElementArr,
     getRandomElementsArr: getRandomElementsArr,
