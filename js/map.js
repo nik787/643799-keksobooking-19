@@ -124,7 +124,7 @@
       }
     });
   };
-enable
+
   var activateInterface = function () {
     map.classList.remove('map--faded');
     window.load(window.pins.createPinElements);
