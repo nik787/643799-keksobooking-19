@@ -72,7 +72,12 @@
   });
 
   var main = document.querySelector('main');
-  var successSend = function () {
+
+  /**
+   * @name successPopupMessage
+   * @description Генерирует и вызывает попап об успешной отправки формы
+   */
+  var successPopupMessage = function () {
     var successPopupTemplate = document.querySelector('#success').content.querySelector('.success');
     var successPopup = successPopupTemplate.cloneNode(true);
     successPopup.id = 'message';
@@ -80,8 +85,11 @@
     document.addEventListener('mousedown', onMessageCloseMousedown);
     document.addEventListener('keydown', onMessageCloseKeydown);
   };
-
-  var errorSend = function () {
+  /**
+   * @name errorPopupMessage
+   * @description Генерирует и вызывает попап об ошибке при отправки формы
+   */
+  var errorPopupMessage = function () {
     var errorPopupTemplate = document.querySelector('#error').content.querySelector('.error');
     var errorPopup = errorPopupTemplate.cloneNode(true);
     errorPopup.id = 'message';
@@ -92,37 +100,43 @@
     document.addEventListener('keydown', onMessageCloseKeydown);
   };
 
-  function onMessageCloseMousedown(e) {
-    if (e.button === window.utils.mouseLeft) {
+  // Обработчики событий
+  var onMessageCloseMousedown = function (evt) {
+    if (evt.button === window.utils.mouseLeft) {
       removeMessage();
     }
-  }
+  };
 
-  function onMessageCloseKeydown(e) {
-    if (e.key === window.utils.escape) {
+  var onMessageCloseKeydown = function (evt) {
+    if (evt.key === window.utils.escape) {
       removeMessage();
     }
-  }
+  };
 
-  function onMessageCloseClick(e) {
-    e.preventDefault();
+  var onMessageCloseClick = function (evt) {
+    evt.preventDefault();
     removeMessage();
-  }
+  };
 
-  function removeMessage() {
+  var removeMessage = function () {
     document.querySelector('#message').remove();
     document.removeEventListener('mousedown', onMessageCloseMousedown);
     document.removeEventListener('keydown', onMessageCloseKeydown);
-  }
+  };
 
   form.addEventListener('submit', function (evt) {
-    window.push(new FormData(form), successSend, errorSend);
+    window.push(new FormData(form), successPopupMessage, errorPopupMessage);
     window.map.disabled();
     form.reset();
     evt.preventDefault();
   });
 
-  var validityForm = function (stateInterface) {
+  /**
+   * @name enableForm
+   * @description Генерирует и вызывает попап об ошибке при отправки формы
+   * @param {Boolean} stateInterface Если true то форма работает, если false то форма отключена
+   */
+  var enableForm = function (stateInterface) {
     if (stateInterface) {
       window.utils.switchDisabled(window.form.fieldsetForm, false);
       window.utils.switchDisabled(window.form.mapFilters, false);
@@ -136,7 +150,7 @@
   };
 
   window.form = {
-    validityForm: validityForm,
+    enable: enableForm,
     fieldsetForm: fieldsetForm,
     mapFilters: mapFilters.children,
     addrInput: addrInput

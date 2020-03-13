@@ -111,12 +111,12 @@
     x: mainPin.style.left,
     y: mainPin.style.top
   };
-
+  window.form.enable(false);
   var disabledInterface = function () {
     map.classList.add('map--faded');
     mainPin.style.top = InitCoordMainPin.y;
     mainPin.style.left = InitCoordMainPin.x;
-    window.form.validityForm(false);
+    window.form.enable(false);
     var pins = document.querySelectorAll('.map__pin');
     pins.forEach(function (element) {
       if (!element.classList.contains('map__pin--main')) {
@@ -124,13 +124,13 @@
       }
     });
   };
-
+enable
   var activateInterface = function () {
     map.classList.remove('map--faded');
     window.load(window.pins.createPinElements);
     mainPin.removeEventListener('keydown', onMainPinEnterPress);
     mainPin.removeEventListener('click', onMainPinLeftClick);
-    window.form.validityForm(true);
+    window.form.enable(true);
     window.form.addrInput.value = window.utils.getCoordinatePinMain(true);
 
   };
