@@ -14,6 +14,7 @@
     });
 
     userCardElement.querySelector('.popup__title').textContent = objAds.offer.title;
+    userCardElement.querySelector('.popup__text--address').textContent = objAds.offer.address;
     userCardElement.querySelector('.popup__text--price').textContent = objAds.offer.price + '₽/ночь';
     userCardElement.querySelector('.popup__type').textContent = window.mock.OffersType[objAds.offer.type];
     userCardElement.querySelector('.popup__text--capacity').textContent = objAds.offer.rooms + ' комнаты для ' + objAds.offer.guests + ' гостей';

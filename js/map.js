@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var ENTER_KEY = 'Enter';
-  var KEY_LEFT_MOUSE_BUTTON = 0;
-  var QUANTITY_OBJECTS = 8;
   var Сoordinates = {
     X_MIN: 0,
     X_MAX: 1200,
@@ -20,13 +17,13 @@
   var mainPin = document.querySelector('.map__pin--main');
 
   var onMainPinEnterPress = function (evt) {
-    if (evt.key === ENTER_KEY) {
+    if (evt.key === window.utils.enter) {
       activateInterface();
     }
   };
 
   var onMainPinLeftClick = function (evt) {
-    if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
+    if (evt.button === window.utils.mouseLeft) {
       activateInterface();
     }
   };
@@ -109,19 +106,17 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  var ads = [];
   window.form.addrInput.value = window.utils.getCoordinatePinMain(false);
   var InitCoordMainPin = {
     x: mainPin.style.left,
     y: mainPin.style.top
   };
-
+  window.form.enable(false);
   var disabledInterface = function () {
     map.classList.add('map--faded');
     mainPin.style.top = InitCoordMainPin.y;
     mainPin.style.left = InitCoordMainPin.x;
-    window.form.validityForm(false);
-    ads = null;
+    window.form.enable(false);
     var pins = document.querySelectorAll('.map__pin');
     pins.forEach(function (element) {
       if (!element.classList.contains('map__pin--main')) {
@@ -131,12 +126,11 @@
   };
 
   var activateInterface = function () {
-    ads = window.mock.createListAds(QUANTITY_OBJECTS);
     map.classList.remove('map--faded');
-    window.pins.createPinElements(ads);
+    window.load(window.pins.createPinElements);
     mainPin.removeEventListener('keydown', onMainPinEnterPress);
     mainPin.removeEventListener('click', onMainPinLeftClick);
-    window.form.validityForm(true);
+    window.form.enable(true);
     window.form.addrInput.value = window.utils.getCoordinatePinMain(true);
 
   };

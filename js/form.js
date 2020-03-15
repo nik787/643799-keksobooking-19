@@ -51,26 +51,97 @@
     }
   };
 
-  var validityForm = function (stateInterface) {
+  formApartmentTypeElement.addEventListener('change', onApartmentTypeChange);
+
+  formTimeinElement.addEventListener('change', function () {
+    adjustmentTimeField(formTimeinElement, formTimeoutElement);
+  });
+
+  formTimeoutElement.addEventListener('change', function () {
+    adjustmentTimeField(formTimeoutElement, formTimeinElement);
+  });
+
+  formGuestsElement.addEventListener('change', onGuestsAndRoomsChange);
+
+  formTRoomsElement.addEventListener('change', onGuestsAndRoomsChange);
+
+  form.addEventListener('reset', function () {
+    setTimeout(function () {
+      window.map.disabled();
+    }, 50);
+  });
+
+  var main = document.querySelector('main');
+
+  /**
+   * @name successPopupMessage
+   * @description Генерирует и вызывает попап об успешной отправки формы
+   */
+  var successPopupMessage = function () {
+    var successPopupTemplate = document.querySelector('#success').content.querySelector('.success');
+    var successPopup = successPopupTemplate.cloneNode(true);
+    successPopup.id = 'message';
+    main.appendChild(successPopup);
+    document.addEventListener('mousedown', onMessageCloseMousedown);
+    document.addEventListener('keydown', onMessageCloseKeydown);
+  };
+  /**
+   * @name errorPopupMessage
+   * @description Генерирует и вызывает попап об ошибке при отправки формы
+   */
+  var errorPopupMessage = function () {
+    var errorPopupTemplate = document.querySelector('#error').content.querySelector('.error');
+    var errorPopup = errorPopupTemplate.cloneNode(true);
+    errorPopup.id = 'message';
+    main.appendChild(errorPopup);
+
+    errorPopup.querySelector('.error__button').addEventListener('click', onMessageCloseClick);
+    document.addEventListener('mousedown', onMessageCloseMousedown);
+    document.addEventListener('keydown', onMessageCloseKeydown);
+  };
+
+  // Обработчики событий
+  var onMessageCloseMousedown = function (evt) {
+    if (evt.button === window.utils.mouseLeft) {
+      removeMessage();
+    }
+  };
+
+  var onMessageCloseKeydown = function (evt) {
+    if (evt.key === window.utils.escape) {
+      removeMessage();
+    }
+  };
+
+  var onMessageCloseClick = function (evt) {
+    evt.preventDefault();
+    removeMessage();
+  };
+
+  var removeMessage = function () {
+    document.querySelector('#message').remove();
+    document.removeEventListener('mousedown', onMessageCloseMousedown);
+    document.removeEventListener('keydown', onMessageCloseKeydown);
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.push(new FormData(form), successPopupMessage, errorPopupMessage);
+    window.map.disabled();
+    form.reset();
+    evt.preventDefault();
+  });
+
+  /**
+   * @name enableForm
+   * @description Генерирует и вызывает попап об ошибке при отправки формы
+   * @param {Boolean} stateInterface Если true то форма работает, если false то форма отключена
+   */
+  var enableForm = function (stateInterface) {
     if (stateInterface) {
       window.utils.switchDisabled(window.form.fieldsetForm, false);
       window.utils.switchDisabled(window.form.mapFilters, false);
       form.classList.remove('ad-form--disabled');
       formGuestsElement.setCustomValidity('Данное количество комнат не рассчитано на столько гостей');
-      formApartmentTypeElement.addEventListener('change', onApartmentTypeChange);
-      formTimeinElement.addEventListener('change', function () {
-        adjustmentTimeField(formTimeinElement, formTimeoutElement);
-      });
-      formTimeoutElement.addEventListener('change', function () {
-        adjustmentTimeField(formTimeoutElement, formTimeinElement);
-      });
-      formGuestsElement.addEventListener('change', onGuestsAndRoomsChange);
-      formTRoomsElement.addEventListener('change', onGuestsAndRoomsChange);
-      form.addEventListener('reset', function () {
-        setTimeout(function () {
-          window.map.disabled();
-        }, 50);
-      });
     } else {
       window.utils.switchDisabled(window.form.fieldsetForm, true);
       window.utils.switchDisabled(window.form.mapFilters, true);
@@ -79,7 +150,7 @@
   };
 
   window.form = {
-    validityForm: validityForm,
+    enable: enableForm,
     fieldsetForm: fieldsetForm,
     mapFilters: mapFilters.children,
     addrInput: addrInput
