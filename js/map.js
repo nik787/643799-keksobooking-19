@@ -125,19 +125,23 @@
     });
   };
 
+  var defaultAds = [];
+
   var activateInterface = function () {
     map.classList.remove('map--faded');
-    window.load(window.pins.createPinElements);
+    window.dataLoad(window.onSuccess);
     mainPin.removeEventListener('keydown', onMainPinEnterPress);
     mainPin.removeEventListener('click', onMainPinLeftClick);
     window.form.enable(true);
     window.form.addrInput.value = window.utils.getCoordinatePinMain(true);
+
 
   };
   mainPin.addEventListener('mousedown', onMainPinLeftClick);
   mainPin.addEventListener('keydown', onMainPinEnterPress);
 
   window.map = {
+    defaultAds: defaultAds,
     disabled: disabledInterface
   };
 })();
