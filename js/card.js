@@ -20,6 +20,7 @@
       userCardElement.remove();
     });
 
+
     userCardElement.querySelector('.popup__title').textContent = objAds.offer.title;
     userCardElement.querySelector('.popup__text--address').textContent = objAds.offer.address;
     userCardElement.querySelector('.popup__text--price').textContent = objAds.offer.price + '₽/ночь';
@@ -60,6 +61,18 @@
     }
 
     map.insertBefore(userCardElement, mapFiltersContainer);
+
+    var onCardEscapePress = function (evt) {
+      if (evt.key === window.utils.escape) {
+        userCardElement.remove();
+        var pin = document.querySelector('.map__pin--active');
+        if (pin) {
+          pin.classList.remove('map__pin--active');
+        }
+      }
+    };
+    document.addEventListener('keydown', onCardEscapePress);
+
   };
 
   window.card = {
