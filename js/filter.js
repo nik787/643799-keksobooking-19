@@ -38,7 +38,7 @@
     filteredAdverts = filteredAdverts.filter(filterType).filter(filterPrice).filter(filterRoom).filter(filterGuest).filter(filterFeatures);
 
 
-    window.debounce(updatePins());
+    window.debounce(updatePins);
   };
 
   /**
