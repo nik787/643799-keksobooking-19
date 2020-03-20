@@ -11,22 +11,22 @@
   };
   var TIMEOUT_IN_MS = 10000;
 
-  var xhrEvents = function (onSuccess, onError, type, dataForm) {
+  var xhrEvents = function (ifSuccess, ifError, type, dataForm) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
-        onSuccess(xhr.response);
+        ifSuccess(xhr.response);
       } else {
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        ifError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
 
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      ifError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      ifError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
     xhr.timeout = TIMEOUT_IN_MS;
@@ -39,11 +39,16 @@
       xhr.send(dataForm);
     }
   };
-  window.load = function (onSuccess, onError) {
-    xhrEvents(onSuccess, onError, 'GET');
+  window.dataLoad = function (ifSuccess, ifError) {
+    xhrEvents(ifSuccess, ifError, 'GET');
   };
 
-  window.push = function (dataForm, onSuccess, onError) {
-    xhrEvents(onSuccess, onError, 'POST', dataForm);
+  window.dataPush = function (dataForm, ifSuccess, ifError) {
+    xhrEvents(ifSuccess, ifError, 'POST', dataForm);
+  };
+
+  window.onSuccess = function (data) {
+    window.map.defaultAds = data;
+    window.pins.createPinElements(window.map.defaultAds);
   };
 })();

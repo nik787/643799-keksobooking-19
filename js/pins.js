@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var QUANTITY_ADS = 5;
   var Pin = {
     WIDTH: 50,
     HEIGHT: 70
@@ -37,8 +38,10 @@
   };
   var createPinElements = function (dataAds) {
     var fragment = document.createDocumentFragment();
-    dataAds.forEach(function (element) {
-      fragment.appendChild(createPinElement(element));
+    dataAds.forEach(function (element, index) {
+      if (index < QUANTITY_ADS) {
+        fragment.appendChild(createPinElement(element));
+      }
     });
     userPinList.appendChild(fragment);
   };
