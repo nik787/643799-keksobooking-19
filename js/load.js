@@ -11,7 +11,7 @@
   };
   var TIMEOUT_IN_MS = 10000;
 
-  var xhrEvents = function (ifSuccess, ifError, type, dataForm) {
+  window.dataLoad = function (ifSuccess, ifError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
@@ -30,21 +30,19 @@
     });
 
     xhr.timeout = TIMEOUT_IN_MS;
-
-    if (type === 'GET') {
-      xhr.open(type, Url.LOAD);
-      xhr.send();
-    } else if (type === 'POST') {
-      xhr.open(type, Url.PUSH);
-      xhr.send(dataForm);
-    }
-  };
-  window.dataLoad = function (ifSuccess, ifError) {
-    xhrEvents(ifSuccess, ifError, 'GET');
+    xhr.open('GET', Url.LOAD);
+    xhr.send();
   };
 
-  window.dataPush = function (dataForm, ifSuccess, ifError) {
-    xhrEvents(ifSuccess, ifError, 'POST', dataForm);
+  window.dataPush = function (dataForm, ifSuccess) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+    xhr.addEventListener('load', function () {
+      ifSuccess(xhr.response);
+    });
+    xhr.timeout = TIMEOUT_IN_MS;
+    xhr.open('POST', Url.PUSH);
+    xhr.send(dataForm);
   };
 
   window.onSuccess = function (data) {

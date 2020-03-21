@@ -5,7 +5,7 @@
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var map = document.querySelector('.map');
 
-  var OffersType = {
+  var offersType = {
     flat: 'Квартира',
     bungalo: 'Бунгало',
     house: 'Дом',
@@ -18,13 +18,14 @@
     var userCardClose = userCardElement.querySelector('.popup__close');
     userCardClose.addEventListener('click', function () {
       userCardElement.remove();
+
     });
 
 
     userCardElement.querySelector('.popup__title').textContent = objAds.offer.title;
     userCardElement.querySelector('.popup__text--address').textContent = objAds.offer.address;
     userCardElement.querySelector('.popup__text--price').textContent = objAds.offer.price + '₽/ночь';
-    userCardElement.querySelector('.popup__type').textContent = OffersType[objAds.offer.type];
+    userCardElement.querySelector('.popup__type').textContent = offersType[objAds.offer.type];
     userCardElement.querySelector('.popup__text--capacity').textContent = objAds.offer.rooms + ' комнаты для ' + objAds.offer.guests + ' гостей';
     userCardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + objAds.offer.checkin + ', выезд до ' + objAds.offer.checkout;
     userCardElement.querySelector('.popup__description').textContent = objAds.offer.description;
@@ -69,6 +70,7 @@
         if (pin) {
           pin.classList.remove('map__pin--active');
         }
+        document.removeEventListener('keydown', onCardEscapePress);
       }
     };
     document.addEventListener('keydown', onCardEscapePress);

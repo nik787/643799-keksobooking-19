@@ -11,46 +11,6 @@
     POINTER_HEIGHT: 20
   };
 
-
-  /**
-   * @name getRandomInt
-   * @description Функция создает рандомное число из диапозона min, max
-   * @param {number} min Минимальное число
-   * @param {number} max Максимальное число
-   * @return {number} Рандомное число
-  */
-  var getRandomInt = function (min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  };
-
-  /**
-   * @name getRandomElementArr
-   * @description Функция возвращяет рандомный элемент массива от 0 до длинны массива
-   * @param {Array} arr Массив данных
-   * @return {Array} Рандомный элемент массива
-   *
-  */
-  var getRandomElementArr = function (arr) {
-    return arr[getRandomInt(0, arr.length)];
-  };
-
-  /**
-   * @name getRandomElementsArr
-   * @description Функция возвращяет рандомный массив элементов от 1 до длинны массива
-   * @param {Array} arr Массив данных
-   * @return {Array} Новый рандомный массив
-  */
-  var getRandomElementsArr = function (arr) {
-    var minElements = 1;
-    var oldArr = arr;
-    var newArr = [];
-    for (var i = 0; i < getRandomInt(minElements, arr.length); i++) {
-      newArr.push(oldArr[i]);
-      oldArr.splice(i, 1);
-    }
-    return newArr;
-  };
-
   /**
    * @name switchDisabled
    * @description Функция устанавливает disabled true/false на html элеметы
@@ -88,9 +48,6 @@
     enter: ENTER_KEY,
     mouseLeft: KEY_LEFT_MOUSE_BUTTON,
     escape: ESCAPE,
-    getRandomInt: getRandomInt,
-    getRandomElementArr: getRandomElementArr,
-    getRandomElementsArr: getRandomElementsArr,
     switchDisabled: switchDisabled,
     getCoordinatePinMain: getCoordinatePinMain
   };

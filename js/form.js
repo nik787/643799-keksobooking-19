@@ -2,7 +2,7 @@
 
 (function () {
   var form = document.querySelector('.ad-form');
-  var fieldsetForm = form.querySelectorAll('fieldset');
+  var fieldsetsForm = form.querySelectorAll('fieldset');
   var mapFilters = document.querySelector('.map__filters');
 
   var addrInput = form.querySelector('#address');
@@ -124,12 +124,18 @@
     document.removeEventListener('keydown', onMessageCloseKeydown);
   };
 
-  form.addEventListener('submit', function (evt) {
-    window.push(new FormData(form), successPopupMessage, errorPopupMessage);
-    window.map.disabled();
-    form.reset();
+  var onFormSubmit = function (evt) {
+    window.dataPush(new FormData(form), function (response) {
+      if (response) {
+        successPopupMessage();
+        window.map.disabled();
+        form.reset();
+      } else {
+        errorPopupMessage();
+      }
+    });
     evt.preventDefault();
-  });
+  };
 
   /**
    * @name enableForm
@@ -138,20 +144,24 @@
    */
   var enableForm = function (stateInterface) {
     if (stateInterface) {
-      window.utils.switchDisabled(window.form.fieldsetForm, false);
+      window.utils.switchDisabled(window.form.fieldsetsForm, false);
       window.utils.switchDisabled(window.form.mapFilters, false);
       form.classList.remove('ad-form--disabled');
       formGuestsElement.setCustomValidity('Данное количество комнат не рассчитано на столько гостей');
     } else {
-      window.utils.switchDisabled(window.form.fieldsetForm, true);
+      window.utils.switchDisabled(window.form.fieldsetsForm, true);
       window.utils.switchDisabled(window.form.mapFilters, true);
       form.classList.add('ad-form--disabled');
+      onApartmentTypeChange();
     }
   };
 
+  form.addEventListener('submit', onFormSubmit);
+
+
   window.form = {
     enable: enableForm,
-    fieldsetForm: fieldsetForm,
+    fieldsetsForm: fieldsetsForm,
     mapFilters: mapFilters.children,
     addrInput: addrInput
   };
