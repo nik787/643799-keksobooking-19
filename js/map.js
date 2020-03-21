@@ -4,8 +4,8 @@
   var Сoordinates = {
     X_MIN: 0,
     X_MAX: 1200,
-    Y_MIN: 130,
-    Y_MAX: 630,
+    Y_MIN: 110,
+    Y_MAX: 610,
   };
   var MainPin = {
     WIDTH: 65,
