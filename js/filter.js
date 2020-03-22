@@ -23,20 +23,23 @@
     filteredAdverts = window.map.defaultAds;
     if (evt.target.id === housingType.id) {
       advertType = evt.target.value;
+      filteredAdverts = filteredAdverts.filter(filterType);
     } else if (evt.target.id === housingPrice.id) {
       advertPrice = evt.target.value;
+      filteredAdverts = filteredAdverts.filter(filterPrice);
     } else if (evt.target.id === housingRooms.id) {
       advertRoom = evt.target.value;
+      filteredAdverts = filteredAdverts.filter(filterRoom);
     } else if (evt.target.id === housingGuests.id) {
       advertGuest = evt.target.value;
+      filteredAdverts = filteredAdverts.filter(filterGuest);
+
     } else if (evt.target.id === ('filter-' + evt.target.value)) {
       advertFeatures = Array.from(filterForm.querySelectorAll('input:checked')).map(function (advert) {
         return advert.value;
       });
+      filteredAdverts = filteredAdverts.filter(filterFeatures);
     }
-
-    filteredAdverts = filteredAdverts.filter(filterType).filter(filterPrice).filter(filterRoom).filter(filterGuest).filter(filterFeatures);
-
 
     window.debounce(updatePins);
   };

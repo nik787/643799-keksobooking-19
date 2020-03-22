@@ -67,7 +67,7 @@
 
   form.addEventListener('reset', function () {
     setTimeout(function () {
-      window.map.disabled();
+      window.map.disable();
     }, 50);
   });
 
@@ -128,7 +128,7 @@
     window.dataPush(new FormData(form), function (response) {
       if (response) {
         successPopupMessage();
-        window.map.disabled();
+        window.map.disable();
         form.reset();
       } else {
         errorPopupMessage();

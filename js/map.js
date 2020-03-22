@@ -147,6 +147,6 @@
 
   window.map = {
     defaultAds: defaultAds,
-    disabled: disabledInterface
+    disable: disabledInterface
   };
 })();
