@@ -38,11 +38,9 @@
   };
   var createPinElements = function (dataAds) {
     var fragment = document.createDocumentFragment();
-    dataAds.forEach(function (element, index) {
-      if (index < QUANTITY_ADS) {
-        fragment.appendChild(createPinElement(element));
-      }
-    });
+    for (var i = 0; i < Math.min(dataAds.length, QUANTITY_ADS); i++) {
+      fragment.appendChild(createPinElement(dataAds[i]));
+    }
     userPinList.appendChild(fragment);
   };
 
