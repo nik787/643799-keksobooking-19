@@ -11,7 +11,7 @@
   };
   var TIMEOUT_IN_MS = 10000;
 
-  window.dataLoad = function (ifSuccess, ifError) {
+  var dataLoad = function (ifSuccess, ifError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
@@ -34,7 +34,7 @@
     xhr.send();
   };
 
-  window.dataPush = function (dataForm, ifSuccess) {
+  var dataPush = function (dataForm, ifSuccess) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
@@ -45,8 +45,27 @@
     xhr.send(dataForm);
   };
 
-  window.onSuccess = function (data) {
-    window.map.defaultAds = data;
-    window.pins.createPinElements(window.map.defaultAds);
+  var onSuccess = function (data) {
+    window.map.adverts = data;
+    window.pins.render(window.map.adverts);
+  };
+  var onError = function (message) {
+    var error = document.createElement('div');
+    error.classList.add('error-message');
+    error.textContent = message;
+    error.style = 'position: fixed; top: 0; left:0; right: 0; text-align: center; font-size: 30px; line-height: 50px; color: rgb(200, 200, 0); background-color: rgba(0, 0, 0, 0.8); ';
+    document.body.appendChild(error);
+    setTimeout(removeError, 3000);
+
+    function removeError() {
+      error.remove();
+    }
+  };
+
+  window.load = {
+    load: dataLoad,
+    push: dataPush,
+    success: onSuccess,
+    error: onError
   };
 })();

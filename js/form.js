@@ -125,7 +125,7 @@
   };
 
   var onFormSubmit = function (evt) {
-    window.dataPush(new FormData(form), function (response) {
+    window.load.push(new FormData(form), function (response) {
       if (response) {
         successPopupMessage();
         window.map.disable();
@@ -144,15 +144,16 @@
    */
   var enableForm = function (stateInterface) {
     if (stateInterface) {
-      window.utils.switchDisabled(window.form.fieldsetsForm, false);
-      window.utils.switchDisabled(window.form.mapFilters, false);
+      window.utils.switch(window.form.fieldsets, false);
+      window.utils.switch(window.form.mapFilters, false);
       form.classList.remove('ad-form--disabled');
       formGuestsElement.setCustomValidity('Данное количество комнат не рассчитано на столько гостей');
     } else {
-      window.utils.switchDisabled(window.form.fieldsetsForm, true);
-      window.utils.switchDisabled(window.form.mapFilters, true);
+      window.utils.switch(window.form.fieldsets, true);
+      window.utils.switch(window.form.mapFilters, true);
       form.classList.add('ad-form--disabled');
       onApartmentTypeChange();
+      window.form.addr.value = window.utils.coordinatePinMain(false);
     }
   };
 
@@ -161,8 +162,8 @@
 
   window.form = {
     enable: enableForm,
-    fieldsetsForm: fieldsetsForm,
+    fieldsets: fieldsetsForm,
     mapFilters: mapFilters.children,
-    addrInput: addrInput
+    addr: addrInput
   };
 })();

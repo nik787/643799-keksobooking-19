@@ -79,10 +79,10 @@
       mainPin.style.top = top + 'px';
       mainPin.style.left = left + 'px';
 
-      window.form.addrInput.value = window.utils.getCoordinatePinMain(true);
+      window.form.addr.value = window.utils.coordinatePinMain(true);
       if (shift.x >= Сoordinates.X_MAX) {
         mainPin.style.left = Сoordinates.X_MAX;
-        window.form.addrInput.value = window.utils.getCoordinatePinMain(true);
+        window.form.addr.value = window.utils.coordinatePinMain(true);
 
       }
     };
@@ -106,7 +106,7 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  window.form.addrInput.value = window.utils.getCoordinatePinMain(false);
+  window.form.addr.value = window.utils.coordinatePinMain(false);
   var initCoordMainPin = {
     x: mainPin.style.left,
     y: mainPin.style.top
@@ -135,18 +135,18 @@
 
   var activateInterface = function () {
     map.classList.remove('map--faded');
-    window.dataLoad(window.onSuccess);
+    window.load.load(window.load.success, window.load.error);
     mainPin.removeEventListener('keydown', onMainPinEnterPress);
     mainPin.removeEventListener('mousedown', onMainPinLeftClick);
     window.form.enable(true);
-    window.form.addrInput.value = window.utils.getCoordinatePinMain(true);
+    window.form.addr.value = window.utils.coordinatePinMain(true);
   };
 
   mainPin.addEventListener('mousedown', onMainPinLeftClick);
   mainPin.addEventListener('keydown', onMainPinEnterPress);
 
   window.map = {
-    defaultAds: defaultAds,
+    adverts: defaultAds,
     disable: disabledInterface
   };
 })();

@@ -35,20 +35,14 @@
     var currentMapPinMainX = Math.round(mainPin.offsetLeft + (MainPin.WIDTH / 2));
     var currentMapPinMainYDisabled = Math.round(mainPin.offsetTop + (MainPin.HEIGHT / 2));
     var currentMapPinMainY = Math.round(mainPin.offsetTop + (MainPin.HEIGHT + MainPin.POINTER_HEIGHT));
-    var result;
-    if (stateInterface) {
-      result = currentMapPinMainX + ', ' + currentMapPinMainY;
-    } else {
-      result = currentMapPinMainX + ', ' + currentMapPinMainYDisabled;
-    }
-    return result;
+    return stateInterface ? currentMapPinMainX + ', ' + currentMapPinMainY : currentMapPinMainX + ', ' + currentMapPinMainYDisabled;
   };
 
   window.utils = {
     enter: ENTER_KEY,
     mouseLeft: KEY_LEFT_MOUSE_BUTTON,
     escape: ESCAPE,
-    switchDisabled: switchDisabled,
-    getCoordinatePinMain: getCoordinatePinMain
+    switch: switchDisabled,
+    coordinatePinMain: getCoordinatePinMain
   };
 })();

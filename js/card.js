@@ -78,6 +78,6 @@
   };
 
   window.card = {
-    createCardPopup: createCardPopup
+    create: createCardPopup
   };
 })();

@@ -27,10 +27,10 @@
       }
       if (oldPin) {
         oldPin.classList.remove('map__pin--active');
-        window.card.createCardPopup(dataAds);
+        window.card.create(dataAds);
         userPinElement.classList.add('map__pin--active');
       } else {
-        window.card.createCardPopup(dataAds);
+        window.card.create(dataAds);
         userPinElement.classList.add('map__pin--active');
       }
     });
@@ -47,6 +47,6 @@
   };
 
   window.pins = {
-    createPinElements: createPinElements
+    render: createPinElements
   };
 })();

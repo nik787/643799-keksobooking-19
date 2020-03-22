@@ -20,7 +20,7 @@
 
   var onFilterChange = function (evt) {
 
-    filteredAdverts = window.map.defaultAds;
+    filteredAdverts = window.map.adverts;
     if (evt.target.id === housingType.id) {
       advertType = evt.target.value;
       filteredAdverts = filteredAdverts.filter(filterType);
@@ -147,7 +147,7 @@
     }
 
     removeOldPins();
-    window.pins.createPinElements(filteredAdverts);
+    window.pins.render(filteredAdverts);
   };
 
   /**
